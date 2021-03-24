@@ -1,0 +1,44 @@
+{
+  "name": "otto/marketplace-php-sdk",
+  "description": "Otto Market PHP SDK",
+  "type": "library",
+  "license": "Apache-2.0",
+  "support": {
+    "issues": "https://github.com/otto-de/marketplace-php-sdk/issues"
+  },
+  "require": {
+    "php": ">=7.4",
+    "league/oauth2-client": "^2.6",
+    "monolog/monolog": "^2.2",
+    "psr/log": "^1.1",
+    "guzzlehttp/guzzle": "^7.2",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "phpunit/phpunit": "^9"
+  },
+  "autoload": {
+    "psr-4": {
+      "Otto\\Market\\": "src/",
+      "Otto\\Market\\Test\\": "tests/",
+      "Otto\\Market\\Products\\": "generated/products/",
+      "Otto\\Market\\Shipments\\": "generated/shipments/"
+    }
+  },
+  "scripts": {
+    "test": [ "./vendor/bin/phpunit --coverage-xml phpunit-coverage.xml --coverage-text tests" ],
+    "psalm": [ "./vendor/bin/psalm --show-info=true" ],
+    "phpcs": [ "./vendor/bin/phpcs --standard=psr12 ./src/" ],
+    "phpcbf": [ "./vendor/bin/phpcbf --standard=psr12 ./src/" ],
+    "generate-openapi": [
+      "./bin/generate_openapi.sh"
+    ]
+  },
+  "scripts-descriptions": {
+    "generate-openapi": "(Re-)generate the generated/ folder. Requires openapi-generator in PATH"
+  },
+  "require-dev": {
+    "vimeo/psalm": "^4.6",
+    "squizlabs/php_codesniffer": "^3.5"
+  }
+}

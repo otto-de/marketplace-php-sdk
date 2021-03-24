@@ -1,0 +1,887 @@
+openapi: 3.0.0
+info:
+  description: This interface describes all endpoints regarding the shipment domain.
+  version: 1.1.0
+  title: Shipments
+paths:
+  /shipments:
+    post:
+      tags:
+        - shipments
+      description: This endpoint should be used to create a shipment with a list of
+        position items. It confirms that the position items in the list have
+        been handed over to the carrier for final delivery to the customer. At
+        this point, the position items are marked with the state ''SENT'' in
+        OTTO Market. This is the trigger for the generation of a purchase
+        receipt.
+      operationId: createdAndSentShipmentUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateShipmentRequest"
+            examples:
+              parcel delivery request:
+                $ref: '#/components/examples/ShipmentCreateRequestParcelDelivery'
+              forwarder delivery request:
+                $ref: '#/components/examples/ShipmentCreateRequestForwarderDelivery'
+              forwarder delivery request (no trackingNumber available):
+                $ref: '#/components/examples/ShipmentCreateRequestForwarderDeliveryWithoutTrackingNo'
+        description: request
+        required: true
+      responses:
+        "201":
+          description: Resource created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateShipmentResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+              examples:
+                "insufficent permissions":
+                  $ref: '#/components/examples/ShipmentCreateInsufficientPermissionsResponse'
+                "tracking key mandatory":
+                  $ref: '#/components/examples/ShipmentCreateTrackingKeyMandatoryResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthenticated"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conflict"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+      deprecated: false
+    get:
+      tags:
+        - shipments
+      description: This endpoint can be used to retrieve the shipments for a given
+        authorized partner.
+      operationId: listShipmentsUsingGET
+      parameters:
+        - name: datefrom
+          description: Shipments created from this date onwards for the given authorized
+            partner will be returned. The date is considered as UTC.
+          in: query
+          required: true
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: YYYY-MM-DD
+        - name: limit
+          in: query
+          description: The maximum number of shipments to be returned in each response.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 25
+        - name: next
+          in: query
+          description: The cursor which points to the next shipment that should be queried.
+            It is used to paginate the results.
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShipmentList"
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorGetShipmentList"
+      deprecated: false
+  "/shipments/carriers/{carrier}/trackingnumbers/{trackingNumber}":
+    get:
+      tags:
+        - shipments
+      description: This endpoint can be used to retrieve a shipment by carrier and tracking
+        number.
+      operationId: shipmentByCarrierAndTrackingNumberUsingGET
+      parameters:
+        - name: carrier
+          in: path
+          description: The carrier of the shipment.
+          required: true
+          schema:
+            type: string
+            enum:
+              - DHL
+              - DHL_FREIGHT
+              - DHL_HOME_DELIVERY
+              - GLS
+              - HERMES
+              - DPD
+              - UPS
+              - HES
+              - HELLMANN
+              - DB_SCHENKER
+              - IDS
+              - EMONS
+              - DACHSER
+              - LOGWIN
+              - KUEHNE_NAGEL
+              - SCHOCKEMOEHLE
+              - KOCH
+              - REITHMEIER
+              - OTHER_FORWARDER
+        - name: trackingNumber
+          in: path
+          description: The tracking number of the shipment assigned by the carrier.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shipment"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenGetShipmentByTrackingNumber"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundGetShipmentByTrackingNumber"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorGetShipmentByTrackingNumber"
+      deprecated: false
+  "/shipments/{shipmentId}":
+    get:
+      tags:
+        - shipments
+      description: This endpoint can be used to retrieve a shipment by OTTO internal
+        shipment ID.
+      operationId: shipmentUsingGET
+      parameters:
+        - name: shipmentId
+          in: path
+          description: Internal shipment identifier assigned by OTTO Market.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shipment"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenGetShipmentByShipmentId"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundGetShipmentByShipmentId"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorGetShipmentByShipmentId"
+      deprecated: false
+  "/shipments/carriers/{carrier}/trackingnumbers/{trackingNumber}/positionitems":
+    post:
+      tags:
+        - shipments
+      description: This endpoint allows to update an existing shipment with new position
+        items. Note that this is just a correction process for shipments where
+        position items are missing. A separate purchase receipt will be
+        generated for the newly added position items.
+      operationId: appendPositionItemsByCarrierAndTrackingNumberUsingPOST
+      parameters:
+        - name: carrier
+          in: path
+          description: The carrier of the shipment.
+          required: true
+          schema:
+            type: string
+            enum:
+              - DHL
+              - DHL_FREIGHT
+              - DHL_HOME_DELIVERY
+              - GLS
+              - HERMES
+              - DPD
+              - UPS
+              - HES
+              - HELLMANN
+              - DB_SCHENKER
+              - IDS
+              - EMONS
+              - DACHSER
+              - LOGWIN
+              - KUEHNE_NAGEL
+              - SCHOCKEMOEHLE
+              - KOCH
+              - REITHMEIER
+              - OTHER_FORWARDER
+        - name: trackingNumber
+          in: path
+          description: The tracking number of the shipment assigned by the carrier.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/PositionItem"
+        description: The position items included in shipment.
+        required: true
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/BadRequestAddPositionItemByTrackingNumber"
+              examples:
+                "insufficent permissions":
+                  $ref: '#/components/examples/ShipmentAddPositionItemsInsufficientPermissionsResponse'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/NotFoundAddPositionItemByTrackingNumber"
+        "409":
+          description: Conflict
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ConflictAddPositionItemByTrackingNumber"
+        "500":
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorAddPositionItemByTrackingNumber"
+      deprecated: false
+  "/shipments/{shipmentId}/positionitems":
+    post:
+      tags:
+        - shipments
+      description: This endpoint allows to update an existing shipment with new position
+        items. Note that this is just a correction process for shipments where
+        position items are missing. A separate purchase receipt will be
+        generated for the newly added position items.
+      operationId: appendPositionItemsUsingPOST
+      parameters:
+        - name: shipmentId
+          in: path
+          description: Internal shipment identifier assigned by OTTO Market.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/PositionItem"
+        description: positionItems
+        required: true
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/BadRequestAddPositionItemByShipmentId"
+              examples:
+                "insufficent permissions":
+                  $ref: '#/components/examples/ShipmentAddPositionItemsInsufficientPermissionsResponse'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/NotFoundAddPositionItemByShipmentId"
+        "409":
+          description: Conflict
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ConflictAddPositionItemByShipmentId"
+        "500":
+          description: Internal Server Error
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorAddPositionItemByShipmentId"
+      deprecated: false
+servers:
+  - url: https://live.api.otto.market/v1
+components:
+  schemas:
+    Address:
+      type: object
+      required:
+        - city
+        - countryCode
+        - zipCode
+      properties:
+        city:
+          type: string
+          example: Dresden
+          description: The city from where the shipment is sent.
+          minLength: 1
+          maxLength: 60
+        countryCode:
+          type: string
+          example: DEU
+          pattern: ^[A-Z]{3}$
+          description: The country code according to
+            [iso-3166-1-alpha-3](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3)
+            from where the shipment is sent.
+        zipCode:
+          type: string
+          example: "01067"
+          description: The zip code from where the shipment is sent.
+          minLength: 1
+          maxLength: 10
+      title: Address
+      description: The warehouse or location from which the shipment will be picked up for
+        final delivery.
+    CreateShipmentRequest:
+      type: object
+      required:
+        - shipDate
+        - shipFromAddress
+        - positionItems
+        - trackingKey
+      properties:
+        trackingKey:
+          $ref: "#/components/schemas/TrackingKey"
+        shipDate:
+          type: string
+          format: date-time
+          description: The date that the shipment is handed over to the carrier.
+            Must be a valid UTC dateTime according to ISO 8601.
+          example: "2019-10-11T07:49:12.642Z"
+        shipFromAddress:
+          $ref: "#/components/schemas/Address"
+        positionItems:
+          description: The position items included in shipment.
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/PositionItem"
+          example:
+            - positionItemId: b01b8ad2-a49c-47fc-8ade-8629ec000020
+              salesOrderId: bf43d748-f13d-49ca-b2e2-1824e9000021
+              returnTrackingKey:
+                carrier: DHL
+                trackingNumber: "577546565072"
+            - positionItemId: b01b8ad2-a49c-47fc-8ade-8629ec000022
+              salesOrderId: bf43d748-f13d-49ca-b2e2-1824e9000021
+              returnTrackingKey:
+                carrier: DHL
+                trackingNumber: "577546565072"
+      title: CreateShipmentRequest
+    CreateShipmentResponse:
+      type: object
+      properties:
+        shipmentId:
+          description: Internal shipment identifier assigned by OTTO Market.
+          type: string
+          example: "100000294699"
+      title: CreateShipmentResponse
+    PositionItem:
+      description: A single position item.
+      type: object
+      required:
+        - positionItemId
+        - salesOrderId
+        - returnTrackingKey
+      properties:
+        positionItemId:
+          description: The ID of a position item of the sales order from the OTTO Market,
+            as defined in the Order API.
+          format: uuid
+          type: string
+          example: e454dff5-a96f-4e96-9399-710cf59645c2
+        salesOrderId:
+          description: The ID of the sales order from the OTTO Market, as defined in the
+            Order API.
+          type: string
+          format: uuid
+          example: a46fb35b-9c77-41c9-af10-2676b756a9af
+        returnTrackingKey:
+          $ref: "#/components/schemas/ReturnTrackingKey"
+      title: PositionItem
+    ReturnTrackingKey:
+      description: The return tracking key for the return process. <br>
+        **Required for parcel deliveries.** <br>
+        **Optional for forwarder deliveries.** <br>
+        Each position item can have its own return tracking key.
+      type: object
+      required:
+        - carrier
+        - trackingNumber
+      properties:
+        carrier:
+          description: The carrier for the return process, which can differ from the
+            carrier used to deliver the shipment to the customer. Please be
+            aware that this carrier can not differ from the chosen carrier in
+            the OPC portal.
+          type: string
+          enum:
+            - DHL
+            - GLS
+            - HERMES
+        trackingNumber:
+          description: The tracking number (or return tracking number) assigned by the
+            carrier.
+          type: string
+      title: ReturnTrackingKey
+      example:
+        carrier: DHL
+        trackingNumber: "577546565072"
+    Shipment:
+      description: A shipment with full details.
+      type: object
+      properties:
+        shipmentId:
+          description: Internal shipment identifier assigned by OTTO Market.
+          type: string
+          example:  "101068391469"
+        creationDate:
+          type: string
+          example: "2019-10-11T07:49:12.642Z"
+        trackingKey:
+          $ref: "#/components/schemas/TrackingKey"
+        shipDate:
+          type: string
+          example: "2019-09-19T13:00:00.000Z"
+        shipFromAddress:
+          $ref: "#/components/schemas/Address"
+        positionItems:
+          description: The position items included in the shipment.
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/PositionItem"
+      title: Shipment
+    ShipmentList:
+      type: object
+      properties:
+        links:
+          type: array
+          description: Contains one single link, which can be used as pointer for
+            Cursor-based pagination.
+          items:
+            $ref: "#/components/schemas/Link"
+        resources:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShipmentWithMinimumDetails"
+      title: ShipmentList
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          example: /v1/shipments?next=12345678&limit=25&datefrom=2019-05-02
+          description: The url of the link
+        rel:
+          type: string
+          example: next
+          description: The relation type of the link. See also
+            https://www.iana.org/assignments/link-relations/link-relations.xhtml.
+            The relation type 'next' is used for paging. The relation type
+            'self' refers to the url of the ressource
+      title: Link
+      description: "A link to various ressources. a Link can have different meanings and
+        targets. The type of relation is specified with the property 'rel'. "
+    ShipmentWithMinimumDetails:
+      description: A shipment with a reduced number of fields.
+      type: object
+      properties:
+        creationDate:
+          type: string
+        shipmentId:
+          description: Internal shipment identifier assigned by OTTO Market.
+          type: string
+        trackingKey:
+          $ref: "#/components/schemas/TrackingKey"
+      title: ShipmentWithMinimumDetails
+      example:
+        shipmentId: "101068626890"
+        creationDate: "2019-10-11T07:49:12.642Z"
+        trackingKey:
+          carrier: "DHL"
+          trackingNumber: "221557927533"
+    TrackingKey:
+      type: object
+      required:
+        - carrier
+        - trackingNumber
+      properties:
+        carrier:
+          description: The carrier of the shipment.
+          type: string
+          enum:
+            - DHL
+            - DHL_FREIGHT
+            - DHL_HOME_DELIVERY
+            - GLS
+            - HERMES
+            - DPD
+            - UPS
+            - HES
+            - HELLMANN
+            - DB_SCHENKER
+            - IDS
+            - EMONS
+            - DACHSER
+            - LOGWIN
+            - KUEHNE_NAGEL
+            - SCHOCKEMOEHLE
+            - KOCH
+            - REITHMEIER
+            - OTHER_FORWARDER
+        trackingNumber:
+          description: The tracking number assigned by the carrier. <br> Required for parcel deliveries. <br> Optional for forwarder deliveries.
+          type: string
+      title: TrackingKey
+      example:
+        carrier: "HERMES"
+        trackingNumber: "H1234567890123456789"
+    BadRequest:
+      description: The partner sent a bad request.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+    BadRequestAddPositionItemByTrackingNumber:
+      description: The partner sent a bad request.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+    BadRequestAddPositionItemByShipmentId:
+      description: The partner sent a bad request.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+    Unauthenticated:
+      description: Authentication is required and has failed.
+    ForbiddenGetShipmentByTrackingNumber:
+      description: The partner does not have the required permissions.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: INSUFFICIENT_PERMISSION
+            detail: The partner is not allowed to get shipment with carrier DHL and tracking number 00340434268030693122
+            path: /shipments/carriers/DHL/trackingnumbers/00340434268030693122
+    ForbiddenGetShipmentByShipmentId:
+      description: The partner does not have the required permissions.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: INSUFFICIENT_PERMISSION
+            detail: The partner is not allowed to get shipment with id 101069930815
+            path: /shipments/101069930815
+    NotFoundGetShipmentByTrackingNumber:
+      description: Server can not find requested resource.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: RESOURCE_NOT_FOUND
+            detail: Found no shipment with carrier DHL and tracking number 003404342680306931225
+            path: /shipments/carriers/DHL/trackingnumbers/003404342680306931225
+    NotFoundGetShipmentByShipmentId:
+      description: Server can not find requested resource.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: RESOURCE_NOT_FOUND
+            detail: Found no shipment with id 1010699308155
+            path: /shipments/1010699308155
+    NotFoundAddPositionItemByTrackingNumber:
+      description: Server can not find requested resource.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: RESOURCE_NOT_FOUND
+            detail: Found no shipment with carrier DHL and tracking number 003404342680306931252
+            path: /shipments/carriers/DHL/trackingnumbers/003404342680306931252/positionitems
+    NotFoundAddPositionItemByShipmentId:
+      description: Server can not find requested resource.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: RESOURCE_NOT_FOUND
+            detail: Found no shipment with id 1010699308155
+            path: /shipments/1010699308155/positionitems
+    Conflict:
+      description: The request could not be completed due to a conflict with the current
+        state of the target resource. The client should not repeat this request
+        without modification.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: DUPLICATE_TRACKING_KEY
+            detail: Tracking key already exists for another shipment.
+            path: /shipments
+    ConflictAddPositionItemByTrackingNumber:
+      description: The request could not be completed due to a conflict with the current
+        state of the target resource. The client should not repeat this request
+        without modification.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: POSITION_ITEM_INCLUDED_IN_OTHER_SHIPMENT
+            detail: One or more of the given position item ids already exist in another shipment
+            path: /shipments/carriers/DHL/trackingnumbers/00340434268030693122/positionitems
+    ConflictAddPositionItemByShipmentId:
+      description: The request could not be completed due to a conflict with the current
+        state of the target resource. The client should not repeat this request
+        without modification.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: POSITION_ITEM_INCLUDED_IN_OTHER_SHIPMENT
+            detail: One or more of the given position item ids already exist in another shipment
+            path: /shipments/101069930815/positionitems
+    InternalServerError:
+      description: An internal server error occurred.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: INTERNAL_SERVER_ERROR
+            path: /shipments
+    InternalServerErrorGetShipmentList:
+      description: An internal server error occurred.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: INTERNAL_SERVER_ERROR
+            path: /shipments?datefrom=2019-10-10
+    InternalServerErrorGetShipmentByTrackingNumber:
+      description: An internal server error occurred.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: INTERNAL_SERVER_ERROR
+            path: shipments/carriers/DHL/trackingnumbers/00340434268030693122
+    InternalServerErrorGetShipmentByShipmentId:
+      description: An internal server error occurred.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: INTERNAL_SERVER_ERROR
+            path: /shipments/101069930815
+    InternalServerErrorAddPositionItemByTrackingNumber:
+      description: An internal server error occurred.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: INTERNAL_SERVER_ERROR
+            path: /shipments/carriers/DHL/trackingnumbers/00340434268030693122/positionitem
+    InternalServerErrorAddPositionItemByShipmentId:
+      description: An internal server error occurred.
+      type: object
+      properties:
+        errors:
+          $ref: "#/components/schemas/ErrorDescription"
+      example:
+        errors:
+          - title: INTERNAL_SERVER_ERROR
+            path: /shipments/101069930815/positionitems
+    ErrorDescription:
+      description: Describes one single error.
+      type: object
+      required:
+        - title
+        - path
+      properties:
+        title:
+          description: The short description of the error.
+          type: string
+        detail:
+          description: The long description of the error.
+          type: string
+        path:
+          description: The called REST path.
+          type: string
+        jsonPath:
+          description: The JSON path points either to the object or the value that caused the error. The JSON path could consists of JSON properties and indexes.
+          type: string
+          example: positionItems[0].returnTrackingKey.trackingNumber
+  examples:
+    ShipmentCreateRequestParcelDelivery:
+      value:
+        trackingKey:
+          carrier: HERMES
+          trackingNumber: H1234567890123456789
+        shipDate: '2019-10-11T07:49:12.642Z'
+        shipFromAddress:
+          city: Dresden
+          countryCode: DEU
+          zipCode: '01067'
+        positionItems:
+          - positionItemId: b01b8ad2-a49c-47fc-8ade-8629ec000020
+            salesOrderId: bf43d748-f13d-49ca-b2e2-1824e9000021
+            returnTrackingKey:
+              carrier: DHL
+              trackingNumber: '577546565072'
+          - positionItemId: b01b8ad2-a49c-47fc-8ade-8629ec000022
+            salesOrderId: bf43d748-f13d-49ca-b2e2-1824e9000021
+            returnTrackingKey:
+              carrier: DHL
+              trackingNumber: '577546565072'
+    ShipmentCreateRequestForwarderDelivery:
+      value:
+        trackingKey:
+          carrier: OTHER_FORWARDER
+          trackingNumber: FF12345678
+        shipDate: '2019-10-11T07:49:12.642Z'
+        shipFromAddress:
+          city: Dresden
+          countryCode: DEU
+          zipCode: '01067'
+        positionItems:
+          - positionItemId: b01b8ad2-a49c-47fc-8ade-8629ec000020
+            salesOrderId: bf43d748-f13d-49ca-b2e2-1824e9000021
+          - positionItemId: b01b8ad2-a49c-47fc-8ade-8629ec000022
+            salesOrderId: bf43d748-f13d-49ca-b2e2-1824e9000021
+    ShipmentCreateRequestForwarderDeliveryWithoutTrackingNo:
+      value:
+        trackingKey:
+          carrier: OTHER_FORWARDER
+        shipDate: '2019-10-11T07:49:12.642Z'
+        shipFromAddress:
+          city: Dresden
+          countryCode: DEU
+          zipCode: '01067'
+        positionItems:
+          - positionItemId: b01b8ad2-a49c-47fc-8ade-8629ec000020
+            salesOrderId: bf43d748-f13d-49ca-b2e2-1824e9000021
+          - positionItemId: b01b8ad2-a49c-47fc-8ade-8629ec000022
+            salesOrderId: bf43d748-f13d-49ca-b2e2-1824e9000021
+    ShipmentCreateInsufficientPermissionsResponse:
+      description: A position item in the request doesn't belong to the partner.
+      value:
+        errors:
+          - title: INSUFFICIENT_PERMISSION
+            detail: The partner is not allowed to create/update a shipment for position item ID
+            path: /shipments
+            jsonPath: "positionItems[0].positionItemId"
+    ShipmentCreateTrackingKeyMandatoryResponse:
+      description: The tracking key in the request is mandatory.
+      value:
+        errors:
+          - title: PROPERTY_IS_MANDATORY
+            detail: The property is mandatory
+            path: /shipments
+            jsonPath: "trackingKey"
+    ShipmentAddPositionItemsInsufficientPermissionsResponse:
+      description: A position item in the request doesn't belong to the partner.
+      value:
+        errors:
+          - title: INSUFFICIENT_PERMISSION
+            detail: The partner is not allowed to create/update a shipment for position item ID
+            path: /shipments
+            jsonPath: "[0].positionItemId"

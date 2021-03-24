@@ -1,0 +1,32 @@
+name: Test and Verify
+
+# Documentation:
+# https://help.github.com/en/articles/workflow-syntax-for-github-actions
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Test and Verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: xdebug
+          tools: composer
+      - name: Install
+        run: composer install
+      - name: Run tests
+        run: composer test
+      - name: Run phpcs
+        if: always()
+        run: composer phpcs
+      - name: Run psalm
+        if: always()
+        run: composer psalm
