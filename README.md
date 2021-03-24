@@ -79,7 +79,7 @@ We offer the following methods for usage:
   
 ## Resources
 
-* **License** – see [Apache 2.0 License](./LICENCSE.md)
+* **License** – see [Apache 2.0 License](./LICENSE)
 
 
 
