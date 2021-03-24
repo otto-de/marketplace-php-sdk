@@ -88,7 +88,7 @@ We offer the following methods for usage:
 [otto-market-api]: http://public-docs.live.api.otto.market/
 [composer]: http://getcomposer.org
 [packagist]: http://packagist.org
-[packagist-install]: https://packagist.org/packages/otto/sdk-php
+[packagist-install]: https://packagist.org/packages/otto/marketplace-php-sdk
 [shipments-doc]: https://public-docs.live.api.otto.market/06_Shipments/v1/shipment-interface.html
 [products-doc]: https://public-docs.live.api.otto.market/03_Products/v1/products-interface.html
 
