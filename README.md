@@ -1,4 +1,4 @@
-[![Lint Code Base](https://github.com/otto-de/marketplace-php-sdk/actions/workflows/php.yml/badge.svg)](https://github.com/otto-ec/sirius_php_sdk/actions/workflows/php.yml)
+[![Lint Code Base](https://github.com/otto-de/marketplace-php-sdk/actions/workflows/php.yml/badge.svg)](https://github.com/otto-de/marketplace-php-sdk/actions/workflows/php.yml)
 
 # Notice!
 **Only products and shipments are currently supported. Other interfaces will follow!**
