@@ -12,14 +12,14 @@ To see how to install the SDK go to the [installation section of the SDK](../REA
 
 start the client via php in your desired shell
 ```sh
-php ./src/SampleCli.php -e (nonlive|live) -u YourUserName -p YourPassword product
+php ./SampleCli.php -e (nonlive|live) -u YourUserName -p YourPassword product
 ```
 
 ## Help
 
 start the client with --help parameter
 ```sh
-php ./src/SampleCli.php --help
+php ./SampleCli.php --help
 USAGE:
    OttoClient.php <OPTIONS> <COMMAND> ...
 
