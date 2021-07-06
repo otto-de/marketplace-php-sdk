@@ -243,7 +243,7 @@ class PartnerProductClient
         $offset = 0;
         while ($offset < sizeof($products)) {
             $nextPostArray = array_slice($products, $offset, self::MAX_PRODUCT_POST_SIZE);
-            $this->logger->debug("Posting next batch of " . sizeof($nextPostArray) . "product variations");
+            $this->logger->debug("Posting next batch of " . sizeof($nextPostArray) . " product variations");
             $serializedPayload =
                 json_encode(
                     $nextPostArray,
