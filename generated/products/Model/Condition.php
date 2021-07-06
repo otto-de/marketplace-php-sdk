@@ -1,6 +1,6 @@
 <?php
 /**
- * MarketPlaceStatus
+ * Condition
  *
  * PHP version 7.2
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \Otto\Market\Products\ObjectSerializer;
 
 /**
- * MarketPlaceStatus Class Doc Comment
+ * Condition Class Doc Comment
  *
  * @category Class
  * @package  Otto\Market\Products
@@ -42,7 +42,7 @@ use \Otto\Market\Products\ObjectSerializer;
  * @template TKey int|null
  * @template TValue mixed|null
  */
-class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializable
+class Condition implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -51,7 +51,7 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
       *
       * @var string
       */
-    protected static $openAPIModelName = 'MarketPlaceStatus';
+    protected static $openAPIModelName = 'Condition';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -59,12 +59,9 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @var string[]
       */
     protected static $openAPITypes = [
-        'sku' => 'string',
-        'status' => 'string',
-        'errors' => '\Otto\Market\Products\Model\MarketPlaceStatusError[]',
-        'information' => '\Otto\Market\Products\Model\MarketPlaceStatusInformation[]',
-        'links' => '\Otto\Market\Products\Model\MarketPlaceStatusLink[]',
-        'lastModified' => '\DateTime'
+        'name' => 'string',
+        'jsonPath' => 'string',
+        'value' => 'string'
     ];
 
     /**
@@ -75,12 +72,9 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'sku' => null,
-        'status' => null,
-        'errors' => null,
-        'information' => null,
-        'links' => null,
-        'lastModified' => 'date-time'
+        'name' => null,
+        'jsonPath' => null,
+        'value' => null
     ];
 
     /**
@@ -110,12 +104,9 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $attributeMap = [
-        'sku' => 'sku',
-        'status' => 'status',
-        'errors' => 'errors',
-        'information' => 'information',
-        'links' => 'links',
-        'lastModified' => 'lastModified'
+        'name' => 'name',
+        'jsonPath' => 'jsonPath',
+        'value' => 'value'
     ];
 
     /**
@@ -124,12 +115,9 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $setters = [
-        'sku' => 'setSku',
-        'status' => 'setStatus',
-        'errors' => 'setErrors',
-        'information' => 'setInformation',
-        'links' => 'setLinks',
-        'lastModified' => 'setLastModified'
+        'name' => 'setName',
+        'jsonPath' => 'setJsonPath',
+        'value' => 'setValue'
     ];
 
     /**
@@ -138,12 +126,9 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
      * @var string[]
      */
     protected static $getters = [
-        'sku' => 'getSku',
-        'status' => 'getStatus',
-        'errors' => 'getErrors',
-        'information' => 'getInformation',
-        'links' => 'getLinks',
-        'lastModified' => 'getLastModified'
+        'name' => 'getName',
+        'jsonPath' => 'getJsonPath',
+        'value' => 'getValue'
     ];
 
     /**
@@ -187,27 +172,6 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
         return self::$openAPIModelName;
     }
 
-    const STATUS_PENDING = 'PENDING';
-    const STATUS_ONLINE = 'ONLINE';
-    const STATUS_RESTRICTED = 'RESTRICTED';
-    const STATUS_REJECTED = 'REJECTED';
-    const STATUS_INACTIVE = 'INACTIVE';
-
-    /**
-     * Gets allowable values of the enum
-     *
-     * @return string[]
-     */
-    public function getStatusAllowableValues()
-    {
-        return [
-            self::STATUS_PENDING,
-            self::STATUS_ONLINE,
-            self::STATUS_RESTRICTED,
-            self::STATUS_REJECTED,
-            self::STATUS_INACTIVE,
-        ];
-    }
 
     /**
      * Associative array for storing property values
@@ -224,12 +188,9 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
      */
     public function __construct(array $data = null)
     {
-        $this->container['sku'] = $data['sku'] ?? null;
-        $this->container['status'] = $data['status'] ?? null;
-        $this->container['errors'] = $data['errors'] ?? null;
-        $this->container['information'] = $data['information'] ?? null;
-        $this->container['links'] = $data['links'] ?? null;
-        $this->container['lastModified'] = $data['lastModified'] ?? null;
+        $this->container['name'] = $data['name'] ?? null;
+        $this->container['jsonPath'] = $data['jsonPath'] ?? null;
+        $this->container['value'] = $data['value'] ?? null;
     }
 
     /**
@@ -240,15 +201,6 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
     public function listInvalidProperties()
     {
         $invalidProperties = [];
-
-        $allowedValues = $this->getStatusAllowableValues();
-        if (!is_null($this->container['status']) && !in_array($this->container['status'], $allowedValues, true)) {
-            $invalidProperties[] = sprintf(
-                "invalid value '%s' for 'status', must be one of '%s'",
-                $this->container['status'],
-                implode("', '", $allowedValues)
-            );
-        }
 
         return $invalidProperties;
     }
@@ -266,155 +218,73 @@ class MarketPlaceStatus implements ModelInterface, ArrayAccess, \JsonSerializabl
 
 
     /**
-     * Gets sku
+     * Gets name
      *
      * @return string|null
      */
-    public function getSku()
+    public function getName()
     {
-        return $this->container['sku'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets sku
+     * Sets name
      *
-     * @param string|null $sku Partner-unique identifier for a product variation provided by the partner
+     * @param string|null $name the name of an attribute.
      *
      * @return self
      */
-    public function setSku($sku)
+    public function setName($name)
     {
-        $this->container['sku'] = $sku;
+        $this->container['name'] = $name;
 
         return $this;
     }
 
     /**
-     * Gets status
+     * Gets jsonPath
      *
      * @return string|null
      */
-    public function getStatus()
+    public function getJsonPath()
     {
-        return $this->container['status'];
+        return $this->container['jsonPath'];
     }
 
     /**
-     * Sets status
+     * Sets jsonPath
      *
-     * @param string|null $status the status of the variation on the OTTO market place
+     * @param string|null $jsonPath the JSON path that leads to the attribute value.
      *
      * @return self
      */
-    public function setStatus($status)
+    public function setJsonPath($jsonPath)
     {
-        $allowedValues = $this->getStatusAllowableValues();
-        if (!is_null($status) && !in_array($status, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    "Invalid value '%s' for 'status', must be one of '%s'",
-                    $status,
-                    implode("', '", $allowedValues)
-                )
-            );
-        }
-        $this->container['status'] = $status;
+        $this->container['jsonPath'] = $jsonPath;
 
         return $this;
     }
 
     /**
-     * Gets errors
+     * Gets value
      *
-     * @return \Otto\Market\Products\Model\MarketPlaceStatusError[]|null
+     * @return string|null
      */
-    public function getErrors()
+    public function getValue()
     {
-        return $this->container['errors'];
+        return $this->container['value'];
     }
 
     /**
-     * Sets errors
+     * Sets value
      *
-     * @param \Otto\Market\Products\Model\MarketPlaceStatusError[]|null $errors errors that occurred when processing the variation
+     * @param string|null $value the value of the attribute to which the requirement applies.
      *
      * @return self
      */
-    public function setErrors($errors)
+    public function setValue($value)
     {
-        $this->container['errors'] = $errors;
-
-        return $this;
-    }
-
-    /**
-     * Gets information
-     *
-     * @return \Otto\Market\Products\Model\MarketPlaceStatusInformation[]|null
-     */
-    public function getInformation()
-    {
-        return $this->container['information'];
-    }
-
-    /**
-     * Sets information
-     *
-     * @param \Otto\Market\Products\Model\MarketPlaceStatusInformation[]|null $information information for product optimization on the OTTO market place
-     *
-     * @return self
-     */
-    public function setInformation($information)
-    {
-        $this->container['information'] = $information;
-
-        return $this;
-    }
-
-    /**
-     * Gets links
-     *
-     * @return \Otto\Market\Products\Model\MarketPlaceStatusLink[]|null
-     */
-    public function getLinks()
-    {
-        return $this->container['links'];
-    }
-
-    /**
-     * Sets links
-     *
-     * @param \Otto\Market\Products\Model\MarketPlaceStatusLink[]|null $links contains the link to the partner variation data and to the product in OTTO shop
-     *
-     * @return self
-     */
-    public function setLinks($links)
-    {
-        $this->container['links'] = $links;
-
-        return $this;
-    }
-
-    /**
-     * Gets lastModified
-     *
-     * @return \DateTime|null
-     */
-    public function getLastModified()
-    {
-        return $this->container['lastModified'];
-    }
-
-    /**
-     * Sets lastModified
-     *
-     * @param \DateTime|null $lastModified last change of the marketplace status
-     *
-     * @return self
-     */
-    public function setLastModified($lastModified)
-    {
-        $this->container['lastModified'] = $lastModified;
+        $this->container['value'] = $value;
 
         return $this;
     }

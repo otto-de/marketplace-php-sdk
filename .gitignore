@@ -4,3 +4,4 @@ composer.lock
 *.iml
 .phpunit.result.cache
 .phpunit.cache
+openapitools.json
