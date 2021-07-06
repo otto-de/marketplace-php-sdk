@@ -58,7 +58,7 @@ class PartnerProductClientTest extends TestCase
         $result = $this->client->getActiveStatus("123363682");
         $this->assertEquals("123363682", $result->getSku());
         $this->assertEquals(true, $result->getActive());
-        $this->assertEquals("2020-12-08T10:45:49.525Z", $result->getLastModified());
+        $this->assertEquals(new \DateTime("2020-12-08T10:45:49.525Z"), $result->getLastModified());
     }
 
     public function testPostActiveStatus() : void
