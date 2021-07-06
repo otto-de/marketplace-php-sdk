@@ -3,22 +3,20 @@ info:
   description: |-
     Manage your product data, send images and
                       much more.
-  version: V1
+  version: V2
   title: Public Partner Product API
 tags:
   - name: Brands
   - name: Categories
   - name: Marketplace Status
   - name: Product Active Status
-  - name: Product Online Status
   - name: Products
 paths:
-  /v1/products:
+  /v2/products:
     get:
       tags:
         - Products
-      summary:
-        Read your product variations. The total number of results could be
+      summary: Read your product variations. The total number of results could be
         limited by specifying query parameters. Generally the resulting product
         variations will be paginated. The default page length is 100 product
         variations per response, also the page size limit. The links specified
@@ -28,15 +26,14 @@ paths:
       parameters:
         - name: sku
           in: query
-          description:
-            search for product variations by their sku value. Use this if your
+          description: search for product variations by their sku value. Use this if your
             sku values contain slash ('/') or dot ('.') characters.
           required: false
           schema:
             type: string
-        - name: productName
+        - name: productReference
           in: query
-          description: search for product variations by their productName value
+          description: search for product variations by their productReference value
           required: false
           schema:
             type: string
@@ -60,8 +57,7 @@ paths:
             format: int32
         - name: limit
           in: query
-          description:
-            proposed limit for the number of products per response page (at most
+          description: proposed limit for the number of products per response page (at most
             100)
           required: false
           schema:
@@ -77,15 +73,13 @@ paths:
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to read the specified product
+          description: The technical user is not authorized to read the specified product
             variations. This may be the case, if the user has not the necessary
             role.
     post:
       tags:
         - Products
-      summary:
-        Create or update your product variations and get a process-id to query
+      summary: Create or update your product variations and get a process-id to query
         results. The limit for the number of product variations in one request
         is 500.
       description: ""
@@ -113,22 +107,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProductProcessProgress"
         "202":
-          description:
-            The request for a modification of the specified product variations
+          description: The request for a modification of the specified product variations
             was accepted and will be executed
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to modify the specified product
+          description: The technical user is not authorized to modify the specified product
             variations. This may be the case, if the user has not the necessary
             role.
-  /v1/products/active-status:
+  /v2/products/active-status:
     get:
       tags:
         - Product Active Status
-      summary:
-        Read the active status of your product variations. The total number of
+      summary: Read the active status of your product variations. The total number of
         results could be limited by specifying query parameters. Generally the
         resulting active status values will be paginated. The default page
         length is 100 active status entries per response, also the page size
@@ -140,15 +131,14 @@ paths:
       parameters:
         - name: sku
           in: query
-          description:
-            search for product variations by their sku value. Use this if your
+          description: search for product variations by their sku value. Use this if your
             sku values contain slash ('/') or dot ('.') characters.
           required: false
           schema:
             type: string
-        - name: productName
+        - name: productReference
           in: query
-          description: search for product variations by their productName value
+          description: search for product variations by their productReference value
           required: false
           schema:
             type: string
@@ -172,8 +162,7 @@ paths:
             format: int32
         - name: limit
           in: query
-          description:
-            proposed limit for the number of active status values per response
+          description: proposed limit for the number of active status values per response
             page (at most 100)
           required: false
           schema:
@@ -185,31 +174,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OnlineStatusList_Response"
+                $ref: "#/components/schemas/ActiveStatusListResponse"
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to read the active status of
+          description: The technical user is not authorized to read the active status of
             the specified product variations. This may be the case, if the user
             has not the necessary role.
     post:
       tags:
         - Product Active Status
-      summary:
-        Update the active status of your product variations and get a process-id
-        to query results. Replaces corresponding online-status endpoint which
-        now is marked as deprecated.
+      summary: Update the active status of your product variations and get a process-id
+        to query results.
       description: ""
       operationId: updateActiveStatus
       parameters:
         - name: X-Request-Timestamp
           in: header
-          description:
-            Holds the optional client side update request timestamp, in ISO
+          description: Holds the optional client side update request timestamp, in ISO
             DateTime format
           required: false
-          example: 2000-10-31T01:30:00.000-05:00
+          example: "2000-10-31T01:30:10.000-05:00"
           schema:
             type: string
             format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
@@ -217,7 +202,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ActiveStatusList_Request"
+              $ref: "#/components/schemas/ActiveStatusListRequest"
       responses:
         "200":
           description: successful operation
@@ -226,19 +211,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProductProcessProgress"
         "202":
-          description:
-            The request for a modification of the active date of the specified
+          description: The request for a modification of the active date of the specified
             product variation was accepted and will be executed
         "400":
           description: The request body is no valid JSON document
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to modify the active status of
+          description: The technical user is not authorized to modify the active status of
             the specified product variations. This may be the case, if the user
             has not the necessary role.
-  /v1/products/brands:
+  /v2/products/brands:
     get:
       tags:
         - Brands
@@ -257,15 +240,13 @@ paths:
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to read a list of known brands.
+          description: The technical user is not authorized to read a list of known brands.
             This may be the case, if the user has not the necessary role.
-  /v1/products/categories:
+  /v2/products/categories:
     get:
       tags:
         - Categories
-      summary:
-        Read the product categories and associated attributes of the OTTO market
+      summary: Read the product categories and associated attributes of the OTTO market
         place. The total number of results could be limited by specifying query
         parameters. Generally the resulting product categories values will be
         paginated. The default page length is 100 product categories per
@@ -282,8 +263,7 @@ paths:
             format: int32
         - name: limit
           in: query
-          description:
-            proposed limit for the number of product categories per response
+          description: proposed limit for the number of product categories per response
             page  (at most 2000)
           required: false
           schema:
@@ -299,15 +279,13 @@ paths:
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to read the product categories.
+          description: The technical user is not authorized to read the product categories.
             This may be the case, if the user has not the necessary role.
-  /v1/products/marketplace-status:
+  /v2/products/marketplace-status:
     get:
       tags:
         - Marketplace Status
-      summary:
-        Read the marketplace status for your product variations. The total
+      summary: Read the marketplace status for your product variations. The total
         number of results could be limited by specifying query parameters.
         Generally the resulting marketplace status will be paginated. The
         default page length is 100 product variations per response, also the
@@ -318,32 +296,28 @@ paths:
       parameters:
         - name: sku
           in: query
-          description:
-            search for product variations by their sku value. Use this if your
+          description: search for product variations by their sku value. Use this if your
             sku values contain slash ('/') or dot ('.') characters.
           required: false
           schema:
             type: string
-        - name: productName
+        - name: productReference
           in: query
-          description:
-            search marketplace status by the productName value of the related
-            product variations
+          description: search marketplace status by the productReference value of the
+            related product variations
           required: false
           schema:
             type: string
         - name: category
           in: query
-          description:
-            search marketplace status by the category value of the related
+          description: search marketplace status by the category value of the related
             product variations
           required: false
           schema:
             type: string
         - name: brand
           in: query
-          description:
-            search marketplace status by the brand value of the related product
+          description: search marketplace status by the brand value of the related product
             variations
           required: false
           schema:
@@ -357,8 +331,7 @@ paths:
             format: int32
         - name: limit
           in: query
-          description:
-            proposed limit for the number of marketplace status per response
+          description: proposed limit for the number of marketplace status per response
             page (at most 1000)
           required: false
           schema:
@@ -387,113 +360,147 @@ paths:
               schema:
                 $ref: "#/components/schemas/MarketPlaceStatusApiResult"
         "304":
-          description:
-            The request included an If-Modified-Since header, but the resource
+          description: The request included an If-Modified-Since header, but the resource
             has not been modified since the specified date.
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to read the specified
+          description: The technical user is not authorized to read the specified
             marketplace status. This may be the case, if the user has not the
             necessary role.
-  /v1/products/online-status:
+  "/v2/products/update-tasks/{processUuid}":
     get:
       tags:
-        - Product Online Status
-      summary: DEPRECATED - please use the corresponding active-status endpoint instead.
+        - Products
+      summary: "Request the results of a product data delivery. The response will
+        contain the links for the different parts of the result: products
+        successfully created or updated, products with failures, products which
+        did not contain any changes compared to the last sent version."
       description: ""
-      operationId: getOnlineStatus
+      operationId: progressByProcessId
       parameters:
-        - name: productName
-          in: query
-          description: search for product variations by their productName value
-          required: false
+        - name: processUuid
+          in: path
+          description: search for a product data delivery result by its processUuid.
+          required: true
           schema:
             type: string
-        - name: category
-          in: query
-          description: search for product variations by their category value
-          required: false
-          schema:
-            type: string
-        - name: brand
-          in: query
-          description: search for product variations by their brand value
-          required: false
-          schema:
-            type: string
-        - name: page
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: limit
-          in: query
-          description:
-            proposed limit for the number of online status values per response
-            page (at most 100)
-          required: false
-          schema:
-            type: integer
-            format: int32
       responses:
         "200":
           description: successful operation
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OnlineStatusList_Response"
-        "401":
-          description: The technical user could not be authenticated
-        "403":
-          description:
-            The technical user is not authorized to read the online status of
-            the specified product variations. This may be the case, if the user
-            has not the necessary role.
-      deprecated: true
-    post:
-      tags:
-        - Product Online Status
-      summary: DEPRECATED - please use the corresponding active-status endpoint instead.
-      description: ""
-      operationId: updateOnlineStatus
-      parameters:
-        - name: X-Request-Timestamp
-          in: header
-          description: Holds the client side update request timestamp
-          required: false
-          schema:
-            type: string
-            format: date-time
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/OnlineStatusList_Request"
-      responses:
-        "200":
-          description: successful operation
-          content:
-            application/json:
+            "*/*":
               schema:
                 $ref: "#/components/schemas/ProductProcessProgress"
-        "202":
-          description:
-            The request for a modification of the online date of the specified
-            product variation was accepted and will be executed
-        "400":
-          description: The request body is no valid JSON document
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to modify the online status of
-            the specified product variations. This may be the case, if the user
-            has not the necessary role.
-      deprecated: true
-  "/v1/products/{sku}":
+          description: The technical user is not authorized to read the specified product
+            variations. This may be the case, if the user has not the necessary
+            role.
+        "404":
+          description: The product data delivery results with the specified processUuid
+            value could not be found.
+  "/v2/products/update-tasks/{processUuid}/failed":
+    get:
+      tags:
+        - Products
+      summary: Request the failed products of the product data delivery with the linked
+        processUuid. The response will contain a list of failed products with
+        associated error details.
+      description: ""
+      operationId: failedByProcessId
+      parameters:
+        - name: processUuid
+          in: path
+          description: search for the failed products of a product data delivery identified
+            by its processUuid.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ProductProcessResult"
+        "401":
+          description: The technical user could not be authenticated
+        "403":
+          description: The technical user is not authorized to read the specified product
+            variations. This may be the case, if the user has not the necessary
+            role.
+        "404":
+          description: The product data delivery results with the specified processUuid
+            value could not be found.
+  "/v2/products/update-tasks/{processUuid}/succeeded":
+    get:
+      tags:
+        - Products
+      summary: Request the succeeded products of the product data delivery with the
+        linked processUuid. The response will contain a list of successfully
+        delivered products.
+      description: ""
+      operationId: succeededByProcessId
+      parameters:
+        - name: processUuid
+          in: path
+          description: search for the succeeded products of a product data delivery
+            identified by its processUuid.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ProductProcessResult"
+        "401":
+          description: The technical user could not be authenticated
+        "403":
+          description: The technical user is not authorized to read the specified product
+            variations. This may be the case, if the user has not the necessary
+            role.
+        "404":
+          description: The product data delivery results with the specified processUuid
+            value could not be found.
+  "/v2/products/update-tasks/{processUuid}/unchanged":
+    get:
+      tags:
+        - Products
+      summary: Request the unchanged products of the product data delivery with the
+        linked processUuid. The response will contain a list of unchanged
+        products.
+      description: ""
+      operationId: unchangedByProcessId
+      parameters:
+        - name: processUuid
+          in: path
+          description: search for the unchanged products of a product data delivery
+            identified by its processUuid.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/ProductProcessResult"
+        "401":
+          description: The technical user could not be authenticated
+        "403":
+          description: The technical user is not authorized to read the specified product
+            variations. This may be the case, if the user has not the necessary
+            role.
+        "404":
+          description: The product data delivery results with the specified processUuid
+            value could not be found.
+  "/v2/products/{sku}":
     get:
       tags:
         - Products
@@ -517,15 +524,13 @@ paths:
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to read the specified product
+          description: The technical user is not authorized to read the specified product
             variations. This may be the case, if the user has not the necessary
             role.
         "404":
-          description:
-            The product variation with the specified sku value could not be
+          description: The product variation with the specified sku value could not be
             found.
-  "/v1/products/{sku}/active-status":
+  "/v2/products/{sku}/active-status":
     get:
       tags:
         - Product Active Status
@@ -550,15 +555,13 @@ paths:
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to read the active status of
+          description: The technical user is not authorized to read the active status of
             the specified product variations. This may be the case, if the user
             has not the necessary role.
         "404":
-          description:
-            The product variation with the specified sku value could not be
+          description: The product variation with the specified sku value could not be
             found.
-  "/v1/products/{sku}/marketplace-status":
+  "/v2/products/{sku}/marketplace-status":
     get:
       tags:
         - Marketplace Status
@@ -582,47 +585,12 @@ paths:
         "401":
           description: The technical user could not be authenticated
         "403":
-          description:
-            The technical user is not authorized to read the specified
+          description: The technical user is not authorized to read the specified
             marketplace status. This may be the case, if the user has not the
             necessary role.
         "404":
-          description:
-            The product variation with the specified sku value could not be
+          description: The product variation with the specified sku value could not be
             found.
-  "/v1/products/{sku}/online-status":
-    get:
-      tags:
-        - Product Online Status
-      summary: DEPRECATED - please use the corresponding active-status endpoint instead.
-      description: ""
-      operationId: getVariationOnlineStatus
-      parameters:
-        - name: sku
-          in: path
-          description: search for a product variation by its SKU value
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OnlineStatus"
-        "401":
-          description: The technical user could not be authenticated
-        "403":
-          description:
-            The technical user is not authorized to read the online status of
-            the specified product variations. This may be the case, if the user
-            has not the necessary role.
-        "404":
-          description:
-            The product variation with the specified sku value could not be
-            found.
-      deprecated: true
 components:
   schemas:
     ActiveStatus:
@@ -631,8 +599,7 @@ components:
         sku:
           type: string
           example: 82388894-5883-488
-          description:
-            Partner-unique identifier for a product variation provided by the
+          description: Partner-unique identifier for a product variation provided by the
             partner
         active:
           type: boolean
@@ -640,18 +607,30 @@ components:
           description: The product variation is supposed to be active or not
         lastModified:
           type: string
+          format: date-time
           example: "2019-06-18T06:12:36.000Z"
-          description:
-            the timestamp (GMT date and time) of the last modification of the
+          description: the timestamp (GMT date and time) of the last modification of the
             active status
           readOnly: true
-    ActiveStatusList_Request:
+    ActiveStatusListRequest:
       type: object
       properties:
         status:
           type: array
           items:
             $ref: "#/components/schemas/ActiveStatus"
+    ActiveStatusListResponse:
+      type: object
+      properties:
+        status:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActiveStatus"
+        links:
+          type: array
+          description: a list of links that can be used for pagination (among others).
+          items:
+            $ref: "#/components/schemas/Link"
     AdditionalRequirement:
       type: object
       properties:
@@ -665,19 +644,19 @@ components:
           description: the JSON path leading to the specific product attribute.
         description:
           type: string
-          example:
-            Die Produktkategorie fällt unter die Preisangabenverordnung, weshalb
+          example: Die Produktkategorie fällt unter die Preisangabenverordnung, weshalb
             ein Grundpreis angegeben werden muss.
           description: a brief human readable description of the requirement
         reference:
           type: string
-          example: https://public-docs.live.api.otto.market/Products/v1/products-interface.html
+          example: https://api.otto.market/docs/03_Products/v2/products-interface.html
           description: a link to the official documentation that describes the requirement
+        condition:
+          $ref: "#/components/schemas/Condition"
         featureRelevance:
           type: array
           example: ["LEGAL"]
-          description:
-            a list of feature relevances that can describe the reason for the
+          description: a list of feature relevances that can describe the reason for the
             requirement.
           items:
             type: string
@@ -704,8 +683,7 @@ components:
         name:
           type: string
           example: Durchmesser
-          description:
-            the name of the attribute. This attribute name has to be used within
+          description: the name of the attribute. This attribute name has to be used within
             the product description.
         attributeGroup:
           type: string
@@ -714,14 +692,12 @@ components:
         type:
           type: string
           example: FLOAT
-          description:
-            defines the format of the attribute value, such as string, integer,
+          description: defines the format of the attribute value, such as string, integer,
             etc.
         multiValue:
           type: boolean
           example: true
-          description:
-            if the value is true, several values can be transferred to this
+          description: if the value is true, several values can be transferred to this
             attribute (polyvalence attribute); otherwise, only a single value
             may be transferred to this attribute.
         unit:
@@ -741,8 +717,7 @@ components:
         featureRelevance:
           type: array
           example: FILTER
-          description:
-            describes what the attribute can be used for and where it gets
+          description: describes what the attribute can be used for and where it gets
             displayed in the shop.
           items:
             type: string
@@ -768,8 +743,7 @@ components:
         recommendedValues:
           type: array
           example: modern klassisch Landhaus Vintage
-          description:
-            use the listed values to get full navigation and filter features on
+          description: use the listed values to get full navigation and filter features on
             otto.de. If no suitable value exists, then enter your own value.
           items:
             type: string
@@ -789,8 +763,7 @@ components:
       properties:
         categoryGroup:
           type: string
-          description:
-            a category group defines a list of categories and the market place
+          description: a category group defines a list of categories and the market place
             attributes for these categories.
         categories:
           type: array
@@ -803,20 +776,22 @@ components:
           description: overview of all attributes that can be used to create variantions.
           items:
             type: string
+        title:
+          type: string
+          description: shows how our product title is built
         attributes:
           type: array
           description: list of the market place attributes for the categories of this group.
           items:
             $ref: "#/components/schemas/AttributeDefinition"
         lastModified:
-          type: integer
-          format: int64
-          example: "2019-06-18T06:12:36.123+02:00"
+          type: string
+          format: date-time
+          example: "2021-07-02T01:35:57.181Z"
           description: last modification date of the category.
         additionalRequirements:
           type: array
-          description:
-            a list of general requirements for certain product attributes that
+          description: a list of general requirements for certain product attributes that
             apply to all categories in the category group
           items:
             $ref: "#/components/schemas/AdditionalRequirement"
@@ -833,6 +808,18 @@ components:
           description: a list of links that can be used for pagination (among others).
           items:
             $ref: "#/components/schemas/Link"
+    Condition:
+      type: object
+      properties:
+        name:
+          type: string
+          description: the name of an attribute.
+        jsonPath:
+          type: string
+          description: the JSON path that leads to the attribute value.
+        value:
+          type: string
+          description: the value of the attribute to which the requirement applies.
     Delivery:
       type: object
       required:
@@ -842,8 +829,7 @@ components:
         type:
           type: string
           example: PARCEL
-          description:
-            The type of the delivery as described in the enumeration. Right now
+          description: The type of the delivery as described in the enumeration. Right now
             we only support PARCEL, FORWARDER_PREFERREDLOCATION and
             FORWARDER_CURBSIDE.
           enum:
@@ -854,8 +840,7 @@ components:
           type: integer
           format: int32
           example: 1
-          description:
-            Mandatory. The delivery time in days, with allowed values from 1 to
+          description: Mandatory. The delivery time in days, with allowed values from 1 to
             999.
     Link:
       type: object
@@ -870,7 +855,7 @@ components:
             - next
         href:
           type: string
-          example: /v1/products?page=0&limit=100
+          example: .../products?page=0&limit=100
           description: the linked reference as URI
     Logistics:
       type: object
@@ -891,8 +876,7 @@ components:
         sku:
           type: string
           example: 82388894-5883-488
-          description:
-            Partner-unique identifier for a product variation provided by the
+          description: Partner-unique identifier for a product variation provided by the
             partner
         status:
           type: string
@@ -909,17 +893,21 @@ components:
           description: errors that occurred when processing the variation
           items:
             $ref: "#/components/schemas/MarketPlaceStatusError"
+        information:
+          type: array
+          description: information for product optimization on the OTTO market place
+          items:
+            $ref: "#/components/schemas/MarketPlaceStatusInformation"
         links:
           type: array
-          description:
-            contains the link to the partner variation data and to the product
+          description: contains the link to the partner variation data and to the product
             in OTTO shop
           items:
             $ref: "#/components/schemas/MarketPlaceStatusLink"
         lastModified:
-          type: integer
-          format: int64
-          example: "2019-12-20T05:54:59.104+02:00"
+          type: string
+          format: date-time
+          example: "2021-07-02T09:30:52.093Z"
           description: last change of the marketplace status
     MarketPlaceStatusApiResult:
       type: object
@@ -944,6 +932,19 @@ components:
           type: string
           example: Das Produktdatenblatt fehlt.
           description: short description of the error
+    MarketPlaceStatusInformation:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 300007 - INCOMPLETE_MEDIA_ASSET_IMPORT
+          description: code to identify the information
+        title:
+          type: string
+          example: Die Bilder werden zur Zeit verarbeitet. Wir bitten um etwas Geduld.
+            Wenn der Status sich innerhalb der nächsten 24 Stunden nicht
+            verändert, wenden Sie sich bitte an support@otto.market.
+          description: short description of the information
     MarketPlaceStatusLink:
       type: object
       properties:
@@ -964,8 +965,7 @@ components:
         type:
           type: string
           example: IMAGE
-          description:
-            The type of the provided media asset. At least one media asset of
+          description: The type of the provided media asset. At least one media asset of
             type 'IMAGE' must be provided. The number of media assets of type
             'IMAGE' is not limited.
           enum:
@@ -984,8 +984,7 @@ components:
           type: string
           format: uri
           example: http://apartners.url/image-location
-          description:
-            The partners location of the media asset as a valid URL. OTTO market
+          description: The partners location of the media asset as a valid URL. OTTO market
             will use the link for downloading the media asset and providing to
             otto.de.
     MonetaryAmount:
@@ -994,16 +993,14 @@ components:
         amount:
           type: number
           example: 19.95
-          description:
-            Holds the value of the monetary amount expressed in a currency, e.g.
+          description: Holds the value of the monetary amount expressed in a currency, e.g.
             euros. The number format expects a decimal point, like 10.99.
             Numbers without a decimal point are taken as a unit of the given
             currency, e.g. 10 is taken as 10 euros.
         currency:
           type: string
           example: EUR
-          description:
-            Holds the currency of the monetary amount expressed as a shortcut
+          description: Holds the currency of the monetary amount expressed as a shortcut
             according to ISO 4217 and
             http://publications.europa.eu/code/de/de-5000700.htm
     NormPriceInfo:
@@ -1015,7 +1012,6 @@ components:
           example: 100
           description: The norm packaging size.
           enum:
-            - 0
             - 1
             - 100
             - 1000
@@ -1051,54 +1047,12 @@ components:
             - ml
             - g
             - Paar
-            - PR
             - RM
             - dm3
-      description:
-        "Maintain the normed prices only if necessary. It must be provided 
-        completely, or not at all. The representation of the normprice have to 
-        contain from the following values for normAmount and normUnit: 1 pcs,
-        1 sqm,1 kg,1 l,1 m,100 ml,100 g,1 g,1000 g,1 pair,1 RM,1 dm3."
-    OnlineStatus:
-      type: object
-      properties:
-        sku:
-          type: string
-          example: 82388894-5883-488
-          description:
-            Partner-unique identifier for a product variation provided by the
-            partner
-        online:
-          type: boolean
-          example: true
-          description: The product variation is supposed to be online or not
-        lastModified:
-          type: integer
-          format: int64
-          example: "2019-06-18T06:12:36.000+02:00"
-          description:
-            the timestamp (GMT date and time) of the last modification of the
-            online status
-          readOnly: true
-    OnlineStatusList_Request:
-      type: object
-      properties:
-        status:
-          type: array
-          items:
-            $ref: "#/components/schemas/OnlineStatus"
-    OnlineStatusList_Response:
-      type: object
-      properties:
-        status:
-          type: array
-          items:
-            $ref: "#/components/schemas/ActiveStatus"
-        links:
-          type: array
-          description: a list of links that can be used for pagination (among others).
-          items:
-            $ref: "#/components/schemas/Link"
+      description: "The information about normed prices, must be provided completely, or
+        not at all. The representation of the normprice have to contain from the
+        following values for normAmount and normUnit: 1 pcs,1 sqm,1 kg,1 l,1
+        m,100 ml,100 g,1 g,1000 g,1 pair,1 RM,1 dm3."
     PackingUnit:
       type: object
       properties:
@@ -1133,8 +1087,7 @@ components:
         vat:
           type: string
           example: FULL
-          description:
-            The value added tax that is included in the sales price, currently
+          description: The value added tax that is included in the sales price, currently
             FULL or REDUCED
           enum:
             - FULL
@@ -1155,34 +1108,30 @@ components:
         category:
           type: string
           example: Outdoorjacke
-          description:
-            Denotes the assortment type of the product, like 'bag' or 'shirt'.
+          description: Denotes the assortment type of the product, like 'bag' or 'shirt'.
             Mandatory. Must be identical for all variants of a product. Must be
             present in the Category service offered via Category endpoint
         brand:
           type: string
           example: Adidas
-          description:
-            Denotes the brand name of a product, like 'Levis'. Must be identical
+          description: Denotes the brand name of a product, like 'Levis'. Must be identical
             for all variants of a product. Must be present in the Brand service
             offered via Brand endpoint.
         productLine:
           type: string
           example: "501"
-          description:
-            Denotes the proper name of a product, like '501'. May contain a
+          description: Denotes the proper name of a product, like '501'. May contain a
             maximum of 50 characters. If provided, it must be identical for all
             variants of a product.
         manufacturer:
           type: string
           example: 3M
-          description:
-            Denotes the manufacturer of a product. If provided, it must be
+          description: Denotes the manufacturer of a product. If provided, it must be
             identical for all variants of a product.
         productionDate:
           type: string
           format: date-time
-          example: "2019-10-19T10:00:15.000+02:00"
+          example: "2021-07-02T09:30:52.093Z"
           description: Denotes the date of manufacture of a product variant.
         multiPack:
           type: boolean
@@ -1191,53 +1140,48 @@ components:
         bundle:
           type: boolean
           example: false
-          description:
-            "If the product variant is part of a bundle: 'true'; otherwise
+          description: "If the product variant is part of a bundle: 'true'; otherwise
             'false'"
         fscCertified:
           type: boolean
           example: true
-          description:
-            "If the product variant is certified by the Forest Stewardship
+          description: "If the product variant is certified by the Forest Stewardship
             Council: 'true'; otherwise 'false'"
         disposal:
           type: boolean
           example: false
-          description:
-            If true, otto.de will present information about the disposal of the
+          description: If true, otto.de will present information about the disposal of the
             product (or parts of it).
         productUrl:
           type: string
           example: http://myproduct.somewhere.com/productname/
-          description:
-            Refers to a representation of the product variant in a shop of the
+          description: Refers to a representation of the product variant in a shop of the
             partner. Should be a valid URL.
         description:
           type: string
           example: <p>Some example words...<b>in bold</b>...some more</p>
-          description:
-            Represents a textual description of a product variant. May contain
-            HTML elements. Relevant for SEO.
+          description: Represents a textual description of a product variant. May contain
+            HTML elements. May contain a maximum of 2000 characters. Relevant
+            for SEO.
         bulletPoints:
           type: array
           example: ["My top key information..."]
-          description:
-            Lists some key information about a product variant a partner can
-            provide. At least one bullet point must be provided. Up to five
+          description: At least one bullet point must be provided. Up to five
             bullet points can be specified. May contain a minimum of 3 and a
             maximum of 180 characters.
           items:
             type: string
         attributes:
           type: array
-          description:
-            Lists all the descriptive information about a product variant a
+          description: Lists all the descriptive information about a product variant a
             partner can provide. Must be provided in the form of a key values
             pair. Will be validated against the AttributeDefinitions from
             Category endpoint provided by Otto market.
           items:
             $ref: "#/components/schemas/Attribute"
       description: Extensive description of the product.
+    ProductLink:
+      type: object
     ProductProcessProgress:
       type: object
       properties:
@@ -1254,8 +1198,7 @@ components:
         progress:
           type: integer
           format: int32
-          description:
-            the fraction of work that is already completed, as compared to the
+          description: the fraction of work that is already completed, as compared to the
             total work
         total:
           type: integer
@@ -1264,23 +1207,27 @@ components:
         pingAfter:
           type: string
           format: date-time
-          example: "2020-05-13T10:40:01.815+02:00"
-          description:
-            recommendation when to poll this resource again to receive a
+          example: "2020-05-13T10:40:01.815Z"
+          description: recommendation when to poll this resource again to receive a
             meaningful update
         links:
           type: array
-          description:
-            a list of links that can be used to access detailed information
+          description: a list of links that can be used to access detailed information
             about the process result
           items:
             $ref: "#/components/schemas/ProductProcessResultLink"
+    ProductProcessResult:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductProcessTaskResult"
     ProductProcessResultLink:
       type: object
       properties:
         rel:
           type: string
-          example: succeeded
           description: link relation type
           enum:
             - self
@@ -1289,50 +1236,72 @@ components:
             - unchanged
         href:
           type: string
-          example: /v1/products/update-tasks/11111111-0000-4444-9999-bbbbbbbbbbbbb/failed
+          example: |
+
+            .../products/update-tasks/11111111-0003-4444-9999-bbbbbbbbbbbbb/succeeded
+
+            .../products/update-tasks/11111111-0003-4444-9999-bbbbbbbbbbbbb/failed
+
+            .../products/update-tasks/11111111-0003-4444-9999-bbbbbbbbbbbbb/unchanged
           description: the linked reference as URI
+    ProductProcessTaskError:
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        path:
+          type: string
+        jsonPath:
+          type: string
+        logref:
+          type: string
+    ProductProcessTaskResult:
+      type: object
+      properties:
+        variation:
+          type: string
+        urlToShopProduct:
+          $ref: "#/components/schemas/ProductLink"
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductProcessTaskError"
     ProductVariation:
       type: object
       required:
         - delivery
         - ean
-        - productName
+        - productReference
         - sku
       properties:
-        productName:
+        productReference:
           type: string
           example: UBN-11779
-          description:
-            The productName groups all variations, that you want to combine into
-            one product. This is not visible to the customer. The productName
-            can be freely assigned and may consist of maximum 50 characters. You
-            can only use the productName once within your product catalog. You
-            should therefore use a value that makes sense for all variations of
-            the product and does not refer to any specifics of a particular
-            variation. You will find the product name, for example, in the
-            product overview in the portal.
+          description: The productReference groups all variations, that you want to combine
+            into one product. This is not visible to the customer. The
+            productReference can be freely assigned and may consist of maximum
+            50 characters. You can only use the productReference once within
+            your product catalog. You should therefore use a value that makes
+            sense for all variations of the product and does not refer to any
+            specifics of a particular variation. You will find the product
+            reference, for example, in the product overview in the portal.
         sku:
           type: string
           example: "3858389911564"
-          description:
-            Identifier for a product variation, provided by the partner, must be
+          description: Identifier for a product variation, provided by the partner, must be
             unique for a partner. It is mandatory and may consist of a maximum
             of 50 characters.
         ean:
           type: string
           example: "3858389911564"
-          description:
-            External identifier of a product, must be unique in a partner
+          description: External identifier of a product, must be unique in a partner
             assortment, must not start with a 2.
-        gtin:
-          type: string
-          example: "00012345600012"
-          description: Global Trade Item Number, formerly known as EAN.
         isbn:
           type: string
           example: 978-3-16-148410-0
-          description:
-            International Standard Book Number, internationally used for
+          description: International Standard Book Number, internationally used for
             identifying media artifacts, like books.
         upc:
           type: string
@@ -1350,29 +1319,25 @@ components:
         moin:
           type: string
           example: "93992000200"
-          description:
-            My Otto Identification Number. The market place ID of the product,
+          description: My Otto Identification Number. The market place ID of the product,
             is generated by the marketplace and returned to the partner, when
             product is created on the market place.
         offeringStartDate:
           type: string
           format: date-time
-          example: "2019-10-19T10:00:15.000+02:00"
+          example: "2019-10-19T09:30:00.000Z"
           description: Date to which the product can be ordered via OTTO marketplace.
         releaseDate:
           type: string
           format: date-time
-          example: "2019-10-19T10:00:15.000+02:00"
-          description:
-            Date to which the product is released by the manufacturer, e.g.
+          example: "2019-10-19T09:30:00.000Z"
+          description: Date to which the product is released by the manufacturer, e.g.
             computer games.
         maxOrderQuantity:
           type: integer
           format: int32
           example: 5
-          description: 
-            "The maximum allowed amount of pieces, the customer can put in one order. 
-            Example: with a value of 3, the customer can only buy 3 pieces in one order."
+          description: The maximum allowed order quantity for the customer.
         productDescription:
           $ref: "#/components/schemas/ProductDescription"
         mediaAssets:
@@ -1405,10 +1370,10 @@ components:
         startDate:
           type: string
           format: date-time
-          example: "2019-10-19T10:00:15.000+02:00"
+          example: "2019-10-19T09:30:00.000Z"
           description: The start date for the sales.
         endDate:
           type: string
           format: date-time
-          example: "2019-10-26T10:00:15.000+02:00"
+          example: "2019-10-19T09:30:00.000Z"
           description: The end date for the sales.
