@@ -85,10 +85,10 @@ We offer the following methods for usage:
 
 
 [otto-market-signup]: https://www.otto.market/
-[otto-market-api]: http://public-docs.live.api.otto.market/
+[otto-market-api]: https://api.otto.market/
 [composer]: http://getcomposer.org
 [packagist]: http://packagist.org
 [packagist-install]: https://packagist.org/packages/otto/marketplace-php-sdk
-[shipments-doc]: https://public-docs.live.api.otto.market/06_Shipments/v1/shipment-interface.html
-[products-doc]: https://public-docs.live.api.otto.market/03_Products/v1/products-interface.html
+[shipments-doc]: https://api.otto.market/docs/06_Shipments/v1/shipment-interface.html
+[products-doc]: https://api.otto.market/docs/03_Products/v2/products-interface.html
 
