@@ -25,14 +25,14 @@ use Psr\Log\LoggerInterface;
 
 /**
  * PartnerProductClient class is a PHP client for the OTTO Market Products API.
- * See https://public-docs.live.api.otto.market/03_Products/v1/products-interface.html
+ * See https://api.otto.market/docs/03_Products/v2/products-interface.html
  *
  * @license  https://opensource.org/licenses/Apache-2.0 Apache-2.0
- * @link     https://public-docs.live.api.otto.market/03_Products/v1/products-interface.html
+ * @link     https://api.otto.market/docs/03_Products/v2/products-interface.html
  */
 class PartnerProductClient
 {
-    private const API_VERSION   = "/v1";
+    private const API_VERSION   = "/v2";
     private const PRODUCTS_PATH = "products";
 
     /**
@@ -167,7 +167,7 @@ class PartnerProductClient
      * Get all product from defined request
      *
      * @param  string|null $sku search parameter sku
-     * @param  string|null $productName search parameter productName
+     * @param  string|null $productReference search parameter productReference
      * @param  string|null $category search parameter category
      * @param  string|null $brand search parameter brand
      *
@@ -181,12 +181,12 @@ class PartnerProductClient
      */
     public function getProducts(
         ?string $sku = null,
-        ?string $productName = null,
+        ?string $productReference = null,
         ?string $category = null,
         ?string $brand = null
     ): array {
         $nextLink = implode("/", [self::API_VERSION, self::PRODUCTS_PATH]);
-        $nextLink = $this->buildProductsLinkFromParameter($nextLink, $sku, $productName, $category, $brand);
+        $nextLink = $this->buildProductsLinkFromParameter($nextLink, $sku, $productReference, $category, $brand);
 
         $listOfProductVariations = [];
 
@@ -394,7 +394,7 @@ class PartnerProductClient
      *
      * @param  string      $nextLink
      * @param  string|null $sku
-     * @param  string|null $productName
+     * @param  string|null $productReference
      * @param  string|null $category
      * @param  string|null $brand
      * @return string
@@ -402,7 +402,7 @@ class PartnerProductClient
     private function buildProductsLinkFromParameter(
         string $nextLink,
         ?string $sku,
-        ?string $productName,
+        ?string $productReference,
         ?string $category,
         ?string $brand
     ): string {
@@ -414,11 +414,11 @@ class PartnerProductClient
             }
         }
 
-        if (!empty($productName)) {
+        if (!empty($productReference)) {
             if (strpos($nextLink, '?') !== false) {
-                $nextLink = $nextLink . '&productName=' . $productName;
+                $nextLink = $nextLink . '&productReference=' . $productReference;
             } else {
-                $nextLink = $nextLink . '?productName=' . $productName;
+                $nextLink = $nextLink . '?productReference=' . $productReference;
             }
         }
 

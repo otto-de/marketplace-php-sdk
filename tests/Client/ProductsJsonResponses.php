@@ -17,7 +17,7 @@ final class ProductsJsonResponses
     "links": [
         {
             "rel": "variation",
-            "href": "/v1/products/123363682"
+            "href": "/v2/products/123363682"
         }
     ],
     "lastModified": "2020-12-23T20:36:27.297Z"
@@ -42,15 +42,15 @@ final class ProductsJsonResponses
         "links": [
             {
                 "rel": "self",
-                "href": "/v1/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333"
+                "href": "/v2/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333"
             },
             {
                 "rel": "failed",
-                "href": "/v1/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333/failed"
+                "href": "/v2/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333/failed"
             },
             {
                 "rel": "succeeded",
-                "href": "/v1/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333/succeeded"
+                "href": "/v2/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333/succeeded"
             }
         ]
     }
@@ -73,7 +73,7 @@ final class ProductsJsonResponses
                     ],
                     "jsonPath": "$.productVariations[*].pricing.normPriceInfo",
                     "name": "normPriceInfo",
-                    "reference": "https://public-docs.live.api.otto.market/Products/v1/products-interface.html"
+                    "reference": "https://public-docs.live.api.otto.market/Products/v2/products-interface.html"
                   }
                 ],
                 "attributes": [
@@ -107,7 +107,7 @@ final class ProductsJsonResponses
             ],
             "links": [
               {
-                "href": "/v1/products?page=0&limit=100",
+                "href": "/v2/products?page=0&limit=100",
                 "rel": "self"
               }
             ]
@@ -118,7 +118,7 @@ final class ProductsJsonResponses
     {
       "links": [
         {
-          "href": "/v1/products",
+          "href": "/v2/products",
           "rel": "self"
         }
       ],
@@ -129,12 +129,12 @@ final class ProductsJsonResponses
       "total": 0
     }
     EOD;
-    
+
     const GET_PRODUCT_PROCESS_PROGRESS_UNCHANGED = <<<EOD
     {
       "links": [
         {
-          "href": "/v1/products/update-tasks/11111111-0000-4444-9999-bbbbbbbbbbbbb/failed",
+          "href": "/v2/products/update-tasks/11111111-0000-4444-9999-bbbbbbbbbbbbb/failed",
           "rel": "self"
         }
       ],
@@ -150,7 +150,7 @@ final class ProductsJsonResponses
     {
       "productVariations": [
         {
-          "productName": "UBN-11779",
+          "productReference": "UBN-11779",
           "sku": "3858389911564",
           "ean": "3858389911564",
           "gtin": "00012345600012",
@@ -235,7 +235,7 @@ final class ProductsJsonResponses
           }
         },
         {
-          "productName": "UBN-11779",
+          "productReference": "UBN-11779",
           "sku": "3858389911564",
           "ean": "3858389911564",
           "gtin": "00012345600012",
@@ -323,7 +323,7 @@ final class ProductsJsonResponses
       "links": [
         {
           "rel": "self",
-          "href": "/v1/products?page=0&limit=100"
+          "href": "/v2/products?page=0&limit=100"
         }
       ]
     }

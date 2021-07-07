@@ -33,7 +33,7 @@ class SampleCli extends PSR3CLI
 
         $options->registerCommand('product', 'list all products');
         $options->registerOption('sku', 'filter for specific sku', 's', 'sku', 'product');
-        $options->registerOption('productName', 'filter for specific productName', 'p', 'productName', 'product');
+        $options->registerOption('productReference', 'filter for specific productReference', 'p', 'productReference', 'product');
         $options->registerOption('category', 'filter for specific category', 'c', 'category', 'product');
         $options->registerOption('brand', 'filter for specific brand', 'b', 'brand', 'product');
         $options->registerOption('format', 'determine output format, e.g. json', 'f', 'format', 'product');
@@ -87,7 +87,7 @@ class SampleCli extends PSR3CLI
                 // @var ProductVariation[] $products
                 $products = $this->productClient($options)->getProducts(
                     $options->getOpt('sku'),
-                    $options->getOpt('productName'),
+                    $options->getOpt('productReference'),
                     $options->getOpt('category'),
                     $options->getOpt('brand')
                 );
@@ -95,7 +95,7 @@ class SampleCli extends PSR3CLI
                     echo json_encode($products);
                 } else {
                     foreach ($products as $product) {
-                        echo 'ProductName: ' . $product->getProductName() . ' -> ' . 'sku: ' . $product->getSku() . "\n";
+                        echo 'ProductReference: ' . $product->getProductReference() . ' -> ' . 'sku: ' . $product->getSku() . "\n";
                     }
                 }
                 break;
