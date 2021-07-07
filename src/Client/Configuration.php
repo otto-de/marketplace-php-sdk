@@ -5,7 +5,7 @@
  * php version 7.4.15
  *
  * @license  https://opensource.org/licenses/Apache-2.0 Apache-2.0
- * @link     https://public-docs.live.api.otto.market
+ * @link     https://api.otto.market/
  *
  */
 
@@ -15,7 +15,7 @@ namespace Otto\Market\Client;
  * Configuration class stores configurable values used by all classes.
  *
  * @license  https://opensource.org/licenses/Apache-2.0 Apache-2.0
- * @link     https://public-docs.live.api.otto.market
+ * @link     https://api.otto.market/
  */
 class Configuration
 {
@@ -71,7 +71,7 @@ class Configuration
             "https://nonlive.api.otto.market/v1/token",
             "token-otto-api",
             "https://nonlive.api.otto.market",
-            "php-sdk",
+            "marketplace-php-sdk",
             60
         );
     }
@@ -83,8 +83,8 @@ class Configuration
             $accessTokenPassword,
             "https://api.otto.market/v1/token",
             "token-otto-api",
-            "https://live.api.otto.market",
-            "php-sdk",
+            "https://api.otto.market",
+            "marketplace-php-sdk",
             60
         );
     }

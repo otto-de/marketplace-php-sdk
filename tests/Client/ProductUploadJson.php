@@ -8,22 +8,34 @@ final class ProductUploadJson
 {
     public const PRODUCT_UPLOAD_RESPONSE = <<<EOD
         {
-          "links": [
-            {
-              "href": "/v1/products/update-tasks/11111111-0000-4444-9999-bbbbbbbbbbbbb/failed",
-              "rel": "succeeded"
-            }
-          ],
-          "message": "string",
-          "pingAfter": "2020-05-13T10:40:01.815+02:00",
-          "progress": 0,
-          "state": "pending",
-          "total": 1
+            "state": "pending",
+            "message": "The process is currently in progress",
+            "progress": 0,
+            "total": 1,
+            "pingAfter": "2020-05-13T10:40:01.815Z",
+            "links": [
+                {
+                    "rel": "self",
+                    "href": "/v2/products/update-tasks/09abe6ca-9c36-45bb-9cd3-a7de7f93284b"
+                },
+                {
+                    "rel": "failed",
+                    "href": "/v2/products/update-tasks/09abe6ca-9c36-45bb-9cd3-a7de7f93284b/failed"
+                },
+                {
+                    "rel": "succeeded",
+                    "href": "/v2/products/update-tasks/09abe6ca-9c36-45bb-9cd3-a7de7f93284b/succeeded"
+                },
+                {
+                    "rel": "unchanged",
+                    "href": "/v2/products/update-tasks/09abe6ca-9c36-45bb-9cd3-a7de7f93284b/unchanged"
+                }
+            ]
         }
     EOD;
 
 
     public const PRODUCT_PAYLOAD_ONE_PRODUCT = <<<EOD
-[{"productName":"Test-2701-01","sku":"Test-2701-01-01","ean":"6970451929875","productDescription":{"category":"Sommerkleid","brand":"someBrand","productLine":"Elegant","fscCertified":false,"disposal":false,"description":"Ein sehr schönes Kleid.","bulletPoints":["Mit Rüschen an Ärmel","In schwarz"],"attributes":[{"name":"Rückenlänge","values":["40"]},{"name":"Set-Info","values":["mit Gürtel"]},{"name":"Besondere Merkmale","values":["mit Rüschen"]},{"name":"Materialzusammensetzung","values":["100% Baumwolle"]},{"name":"Material","values":["Baumwolle"]},{"name":"Materialart","values":["Spitze"]},{"name":"Schnittform Länge","values":["knieumspielend"]},{"name":"Anlässe","values":["Abendmode","Casualmode","Frühlingsmode"]},{"name":"Optik","values":["gemustert","gestreift"]}]},"mediaAssets":[{"type":"IMAGE"}],"delivery":{"type":"PARCEL","deliveryTime":1},"pricing":{"standardPrice":{"amount":199,"currency":"EUR"},"vat":"FULL"},"logistics":{"packingUnitCount":0,"packingUnits":[]}}]
+[{"productReference":"Test-2701-01","sku":"Test-2701-01-01","ean":"6970451929875","productDescription":{"category":"Sommerkleid","brand":"someBrand","productLine":"Elegant","fscCertified":false,"disposal":false,"description":"Ein sehr schönes Kleid.","bulletPoints":["Mit Rüschen an Ärmel","In schwarz"],"attributes":[{"name":"Rückenlänge","values":["40"]},{"name":"Set-Info","values":["mit Gürtel"]},{"name":"Besondere Merkmale","values":["mit Rüschen"]},{"name":"Materialzusammensetzung","values":["100% Baumwolle"]},{"name":"Material","values":["Baumwolle"]},{"name":"Materialart","values":["Spitze"]},{"name":"Schnittform Länge","values":["knieumspielend"]},{"name":"Anlässe","values":["Abendmode","Casualmode","Frühlingsmode"]},{"name":"Optik","values":["gemustert","gestreift"]}]},"mediaAssets":[{"type":"IMAGE"}],"delivery":{"type":"PARCEL","deliveryTime":1},"pricing":{"standardPrice":{"amount":199,"currency":"EUR"},"vat":"FULL"},"logistics":{"packingUnitCount":0,"packingUnits":[]}}]
 EOD;
 }

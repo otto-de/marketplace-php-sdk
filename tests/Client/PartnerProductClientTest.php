@@ -33,14 +33,14 @@ class PartnerProductClientTest extends TestCase
 
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v1/products/123363682/marketplace-status', array(), $response]]
+                [['/v2/products/123363682/marketplace-status', array(), $response]]
             )
         );
 
         $result = $this->client->getMarketplaceStatus("123363682");
         $this->assertEquals("600004 - VARIATIONTHEME_INVALID", $result->getErrors()[0]->getCode());
         $this->assertEquals("REJECTED", $result->getStatus());
-        $this->assertEquals("/v1/products/123363682", $result->getLinks()[0]->getHref());
+        $this->assertEquals("/v2/products/123363682", $result->getLinks()[0]->getHref());
         $this->assertEquals("variation", $result->getLinks()[0]->getRel());
     }
 
@@ -51,7 +51,7 @@ class PartnerProductClientTest extends TestCase
 
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v1/products/123363682/active-status', array(), $response]]
+                [['/v2/products/123363682/active-status', array(), $response]]
             )
         );
 
@@ -75,7 +75,7 @@ class PartnerProductClientTest extends TestCase
             $this->returnValueMap(
                 [
                     [
-                        '/v1/products/active-status',
+                        '/v2/products/active-status',
                         $jsonRequestBody,
                         ['Content-Type' => 'application/json'],
                         $response,
@@ -84,7 +84,7 @@ class PartnerProductClientTest extends TestCase
             )
         );
 
-        $result = $result = $this->client->postActiveStatus($activeStatusListRequest);
+        $result = $this->client->postActiveStatus($activeStatusListRequest);
         $this->assertEquals("pending", $result->getState());
         $this->assertEquals(new \DateTime("2021-03-15T10:26:15.148+0000"), $result->getPingAfter());
         $this->assertEquals(0, $result->getProgress());
@@ -92,17 +92,17 @@ class PartnerProductClientTest extends TestCase
         $this->assertEquals(3, count($result->getLinks()));
         $this->assertEquals("self", $result->getLinks()[0]->getRel());
         $this->assertEquals(
-            "/v1/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333",
+            "/v2/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333",
             $result->getLinks()[0]->getHref()
         );
         $this->assertEquals("failed", $result->getLinks()[1]->getRel());
         $this->assertEquals(
-            "/v1/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333/failed",
+            "/v2/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333/failed",
             $result->getLinks()[1]->getHref()
         );
         $this->assertEquals("succeeded", $result->getLinks()[2]->getRel());
         $this->assertEquals(
-            "/v1/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333/succeeded",
+            "/v2/products/update-tasks/e2484daf-440f-4b1a-a6d1-f6a370a3d333/succeeded",
             $result->getLinks()[2]->getHref()
         );
     }
@@ -114,7 +114,7 @@ class PartnerProductClientTest extends TestCase
 
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v1/products/categories', array(), $response]]
+                [['/v2/products/categories', array(), $response]]
             )
         );
 
@@ -134,7 +134,7 @@ class PartnerProductClientTest extends TestCase
 
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v1/products/categories', array(), $response]]
+                [['/v2/products/categories', array(), $response]]
             )
         );
 
@@ -150,7 +150,7 @@ class PartnerProductClientTest extends TestCase
 
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v1/products/categories', array(), $response]]
+                [['/v2/products/categories', array(), $response]]
             )
         );
 
@@ -166,7 +166,7 @@ class PartnerProductClientTest extends TestCase
 
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v1/products', array(), $response]]
+                [['/v2/products', array(), $response]]
             )
         );
 
@@ -184,18 +184,18 @@ class PartnerProductClientTest extends TestCase
             '\Otto\Market\Products\Model\ProductProcessProgress'
         );
         $response = new Response(200, array(), $json);
-        
+
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v1/products', array(), $response]]
+                [['/v2/products', array(), $response]]
             )
         );
 
         $result = $this->client->getUpdatedUploadProgress($lastProgress);
-        
+
         $this->assertEquals("9999-03-15 10:40:00", date_format($result->getPingAfter(), 'Y-m-d H:i:s'));
     }
-        
+
     public function testGetUpdatedUploadProgressUnchanged()
     {
         $expectedProgress = ObjectSerializer::deserialize(

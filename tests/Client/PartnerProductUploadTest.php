@@ -33,7 +33,7 @@ class PartnerProductUploadTest extends TestCase
         $response = new Response(202, array(), $json);
         $this->stub->method('post')->will(
             $this->returnValueMap(
-                [['/v1/products',
+                [['/v2/products',
                     ProductUploadJson::PRODUCT_PAYLOAD_ONE_PRODUCT,
                     ['Content-Type' => 'application/json'],
                     $response]]
@@ -50,10 +50,13 @@ class PartnerProductUploadTest extends TestCase
         self::assertEquals(1, sizeof($result));
         self::assertEquals(1, $result[0]->getTotal());
         self::assertEquals(0, $result[0]->getProgress());
-        self::assertEquals(date_create("2020-05-13T10:40:01.815+02:00"), $result[0]->getPingAfter());
+        self::assertEquals(date_create("2020-05-13T10:40:01.815+00:00"), $result[0]->getPingAfter());
         self::assertEquals("pending", $result[0]->getState());
-        self::assertEquals("string", $result[0]->getMessage());
-        self::assertEquals("succeeded", $result[0]->getLinks()[0]->getRel());
+        self::assertEquals("The process is currently in progress", $result[0]->getMessage());
+        self::assertEquals("self", $result[0]->getLinks()[0]->getRel());
+        self::assertEquals("failed", $result[0]->getLinks()[1]->getRel());
+        self::assertEquals("succeeded", $result[0]->getLinks()[2]->getRel());
+        self::assertEquals("unchanged", $result[0]->getLinks()[3]->getRel());
     }
 
 
