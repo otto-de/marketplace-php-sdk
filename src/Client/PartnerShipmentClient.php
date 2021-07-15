@@ -5,7 +5,7 @@
  * php version 7.4.15
  *
  * @license  https://opensource.org/licenses/Apache-2.0 Apache-2.0
- * @link     https://public-docs.live.api.otto.market/03_Products/v1/products-interface.html
+ * @link     https://public-docs.live.api.otto.market/06_Shipments/v1/shipment-interface.html
  */
 
 namespace Otto\Market\Client;
