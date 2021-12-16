@@ -30,7 +30,6 @@ use Psr\Log\LoggerInterface;
  */
 class Oauth2ApiAccessor
 {
-
     private LoggerInterface $log;
 
     private GenericProvider $provider;
