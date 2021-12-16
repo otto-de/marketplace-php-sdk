@@ -12,7 +12,7 @@ To see how to install the SDK go to the [installation section of the SDK](../REA
 
 start the client via php in your desired shell
 ```sh
-php ./SampleCli.php -e (nonlive|live) -u YourUserName -p YourPassword product
+php ./SampleCli.php -e (sandbox|live) -u YourUserName -p YourPassword product
 ```
 
 ## Help
@@ -37,7 +37,7 @@ OPTIONS:
    -p <password>,         password for authentication                          
    --password <password>                                                       
 
-   -e <environment>,      environment: live or nonlive                         
+   -e <environment>,      environment: live or sandbox                         
    --environment                                                               
    <environment>                                                               
 

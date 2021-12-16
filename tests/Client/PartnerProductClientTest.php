@@ -21,7 +21,7 @@ class PartnerProductClientTest extends TestCase
     public function setUp(): void
     {
         $this->stub = $this->createStub(Oauth2ApiAccessor::class);
-        $configuration = Configuration::forNonlive("user", "password");
+        $configuration = Configuration::forSandbox("user", "password");
         $logger = new Logger('name');
         $this->client = new PartnerProductClient($configuration, $logger, $this->stub);
     }

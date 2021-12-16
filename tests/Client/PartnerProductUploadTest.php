@@ -9,7 +9,6 @@ use Monolog\Logger;
 use Otto\Market\Client\Configuration;
 use Otto\Market\Client\Oauth2\Oauth2ApiAccessor;
 use Otto\Market\Client\PartnerProductClient;
-use Otto\Market\Products\Model\ProductProcessProgress;
 use Otto\Market\Products\Model\ProductVariation;
 use Otto\Market\Products\ObjectSerializer;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +21,7 @@ class PartnerProductUploadTest extends TestCase
     public function setUp(): void
     {
         $this->stub = $this->createStub(Oauth2ApiAccessor::class);
-        $configuration = Configuration::forNonlive("user", "password");
+        $configuration = Configuration::forSandbox("user", "password");
         $logger = new Logger('name');
         $this->client = new PartnerProductClient($configuration, $logger, $this->stub);
     }
