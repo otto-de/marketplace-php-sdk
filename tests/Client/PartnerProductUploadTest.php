@@ -9,7 +9,6 @@ use Monolog\Logger;
 use Otto\Market\Client\Configuration;
 use Otto\Market\Client\Oauth2\Oauth2ApiAccessor;
 use Otto\Market\Client\PartnerProductClient;
-use Otto\Market\Products\Model\ProductProcessProgress;
 use Otto\Market\Products\Model\ProductVariation;
 use Otto\Market\Products\ObjectSerializer;
 use PHPUnit\Framework\TestCase;

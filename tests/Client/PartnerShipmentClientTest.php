@@ -5,22 +5,16 @@ declare(strict_types=1);
 namespace Otto\Market\Test\Client;
 
 use PHPUnit\Framework\TestCase;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\ServerException;
 use Otto\Market\Client\PartnerShipmentClient;
 use Otto\Market\Client\Oauth2\Oauth2ApiAccessor;
 use Otto\Market\Client\Configuration;
 use Otto\Market\Shipments\Model\CreateShipmentRequest;
 use Otto\Market\Shipments\Model\PositionItem;
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 require_once 'ShipmentJsonResponses.php';
 
