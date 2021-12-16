@@ -29,7 +29,7 @@ class SampleCli extends PSR3CLI
         $options->registerOption('user', 'username for authentication', 'u', 'user');
         $options->registerOption('password', 'password for authentication', 'p', 'password');
 
-        $options->registerOption('environment', 'environment: live or nonlive', 'e', 'environment');
+        $options->registerOption('environment', 'environment: live or sandbox', 'e', 'environment');
 
         $options->registerCommand('product', 'list all products');
         $options->registerOption('sku', 'filter for specific sku', 's', 'sku', 'product');
@@ -70,8 +70,8 @@ class SampleCli extends PSR3CLI
             case 'live':
                 $configuration = Configuration::forLive($options->getOpt('user'), $options->getOpt('password'));
                 break;
-            case 'nonlive':
-                $configuration = Configuration::forNonlive($options->getOpt('user'), $options->getOpt('password'));
+            case 'sandbox':
+                $configuration = Configuration::forSandbox($options->getOpt('user'), $options->getOpt('password'));
                 break;
             default:
                 $this->error("Invalid environment");

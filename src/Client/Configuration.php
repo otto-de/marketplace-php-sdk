@@ -62,14 +62,14 @@ class Configuration
         $this->httpTimeout         = $httpTimeout;
     }
 
-    public static function forNonlive(string $accessTokenUsername, string $accessTokenPassword): Configuration
+    public static function forSandbox(string $accessTokenUsername, string $accessTokenPassword): Configuration
     {
         return new Configuration(
             $accessTokenUsername,
             $accessTokenPassword,
-            "https://nonlive.api.otto.market/v1/token",
+            "https://sandbox.api.otto.market/v1/token",
             "token-otto-api",
-            "https://nonlive.api.otto.market",
+            "https://sandbox.api.otto.market",
             "marketplace-php-sdk",
             60
         );

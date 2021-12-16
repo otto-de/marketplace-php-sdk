@@ -37,7 +37,7 @@ final class PartnerShipmentClientTest extends TestCase
     public function setUp(): void
     {
         $this->stub    = $this->createStub(Oauth2ApiAccessor::class);
-        $configuration = Configuration::forNonlive("user", "password");
+        $configuration = Configuration::forSandbox("user", "password");
         $logger        = new Logger('name');
         $this->client  = new PartnerShipmentClient($configuration, $logger, $this->stub);
     }
