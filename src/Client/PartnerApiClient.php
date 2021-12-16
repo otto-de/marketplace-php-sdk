@@ -26,7 +26,6 @@ use Psr\Log\LoggerInterface;
  */
 class PartnerApiClient
 {
-
     private Oauth2ApiAccessor $accessor;
 
     private LoggerInterface $logger;

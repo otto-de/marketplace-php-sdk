@@ -19,7 +19,6 @@ namespace Otto\Market\Client;
  */
 class Configuration
 {
-
     private string $accessTokenUsername;
 
     private string $accessTokenPassword;
