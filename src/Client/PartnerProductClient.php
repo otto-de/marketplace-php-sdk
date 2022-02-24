@@ -313,12 +313,8 @@ class PartnerProductClient
     public function getMarketplaceStatus(string $sku): ?MarketPlaceStatus
     {
         $this->logger->debug("getMarketplaceStatus called for sku=$sku");
-        $response = $this->accessor->get(implode(
-            "/",
-            [self::API_VERSION,
-            self::PRODUCTS_PATH,
-            $sku,
-            'marketplace-status'])
+        $response = $this->accessor->get(
+            implode("/", [self::API_VERSION, self::PRODUCTS_PATH, $sku, 'marketplace-status'])
         );
         /*
          * @var MarketPlaceStatus $marketplaceStatus
