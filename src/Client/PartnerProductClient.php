@@ -318,7 +318,8 @@ class PartnerProductClient
             [self::API_VERSION,
             self::PRODUCTS_PATH,
             $sku,
-            'marketplace-status']));
+            'marketplace-status'])
+        );
         /*
          * @var MarketPlaceStatus $marketplaceStatus
          */
