@@ -115,8 +115,8 @@ class SampleCli extends PSR3CLI
                 break;
             case 'categories':
                 // @var CategoryGroup[] $categories
-                $categories = $this->productClient()->getCategories();
-                foreach ($categories as $categoryGroup) {
+                $it = $this->productClient()->getCategories();
+                foreach ($it as $categoryGroup) {
                     foreach ($categoryGroup->getCategories() as $category) {
                         echo $categoryGroup->getCategoryGroup() . '->' . $category . "\n";
                     }

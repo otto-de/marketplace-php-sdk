@@ -20,6 +20,7 @@ use Otto\Market\Products\ObjectSerializer;
 use Otto\Market\Products\Model\Brand;
 use Otto\Market\Products\Model\ProductVariation;
 use Otto\Market\Products\Model\MarketPlaceStatus;
+use Otto\Market\Client\Iterators\CategoryGroupIterator;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 
@@ -96,41 +97,24 @@ class PartnerProductClient
     }
 
     /**
-     * Load all categories
-     *
-     * @return CategoryGroup[] an array of all brands.
+     * Load all categories that can be used for product uploads to the OTTO marketplace.
+     * See https://api.otto.market/docs#operation/Products-V2__getCategoryGroups for details.
+     * 
+     * @param int $pageSize set the page size that should be used for iterating over all categories.
+     * The page size has to be between 10 and 2000. if you specify a smaller or greater page size the 
+     * value will be corrected automatically to fullfill these limits. Specifiying a smaller page size
+     * will lead to a smaller footprint because less categories have to be held in memory while a
+     * smaller page size will lead to more GET request against the OTTO API.
+     * The default value for the page size is 100.
+     * @return \Iterator an iterator object that can be used to iterate over all categories.
      * @throws ClientExceptionInterface on HTTP client exception
      * @throws Oauth2\Oauth2Exception on token refresh exception
      *
      * @psalm-suppress PossiblyInvalidMethodCall
      */
-    public function getCategories(): array
+    public function getCategories(int $pageSize = 100): \Iterator
     {
-        $mergedCategoryGroups = [];
-        $nextLink = implode("/", [self::API_VERSION, self::PRODUCTS_PATH, 'categories']);
-        do {
-            $response = $this->accessor->get($nextLink);
-            /*
-             * @var CategoryGroups $categoryGroups
-             */
-            $categoryGroups       = ObjectSerializer::deserialize(
-                $response->getBody()->getContents(),
-                '\Otto\Market\Products\Model\CategoryGroups'
-            );
-            $nextLink = null;
-            if (!is_null($categoryGroups)) {
-                $mergedCategoryGroups = array_merge($mergedCategoryGroups, $categoryGroups->getCategoryGroups());
-
-                foreach ($categoryGroups->getLinks() as $link) {
-                    if ($link->getRel() == 'next') {
-                        $nextLink = $link->getHref();
-                        $this->logger->debug("Accessing next link " . $link->getHref());
-                        break;
-                    }
-                }
-            }
-        } while (!is_null($nextLink));
-        return $mergedCategoryGroups;
+        return new CategoryGroupIterator($this -> accessor, self::API_VERSION, self::PRODUCTS_PATH, $pageSize, $this -> logger);
     }
 
     /**

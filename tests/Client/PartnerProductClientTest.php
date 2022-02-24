@@ -114,7 +114,7 @@ class PartnerProductClientTest extends TestCase
 
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v2/products/categories', array(), $response]]
+                [['/v2/products/categories?limit=100', array(), $response]]
             )
         );
 
@@ -134,7 +134,7 @@ class PartnerProductClientTest extends TestCase
 
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v2/products/categories', array(), $response]]
+                [['/v2/products/categories?limit=100', array(), $response]]
             )
         );
 
@@ -150,7 +150,7 @@ class PartnerProductClientTest extends TestCase
 
         $this->stub->method('get')->will(
             $this->returnValueMap(
-                [['/v2/products/categories', array(), $response]]
+                [['/v2/products/categories?limit=100', array(), $response]]
             )
         );
 
