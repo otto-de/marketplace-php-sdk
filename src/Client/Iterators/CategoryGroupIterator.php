@@ -98,7 +98,7 @@ class CategoryGroupIterator implements \Iterator
 
     public function valid(): bool
     {
-        return isset($this -> categoryGroups) && 
+        return isset($this -> categoryGroups) &&
                 isset($this -> categoryGroups -> getCategoryGroups()[$this -> position]);
     }
 }

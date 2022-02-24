@@ -192,8 +192,10 @@ class PartnerProductClient
                 /*
                  * @var ProductVariation $productVariation
                  */
-                $productVariation = ObjectSerializer::deserialize($variation,
-                        "\Otto\Market\Products\Model\ProductVariation");
+                $productVariation = ObjectSerializer::deserialize(
+                    $variation,
+                    "\Otto\Market\Products\Model\ProductVariation"
+                );
                 array_push($listOfProductVariations, $productVariation);
             }
 
@@ -240,8 +242,11 @@ class PartnerProductClient
                 $nextPostArray,
                 (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS)
             );
-            $postResult = $this->accessor->post($path, $serializedPayload, 
-                    ['Content-Type' => 'application/json']);
+            $postResult = $this->accessor->post(
+                $path,
+                $serializedPayload,
+                ['Content-Type' => 'application/json']
+            );
             $this->logger->debug("POST returned with status code " . $postResult->getStatusCode());
             /*
              * @var ProductProcessProgress $parsedPostResult
@@ -308,8 +313,12 @@ class PartnerProductClient
     public function getMarketplaceStatus(string $sku): ?MarketPlaceStatus
     {
         $this->logger->debug("getMarketplaceStatus called for sku=$sku");
-        $response = $this->accessor->get(implode("/", [self::API_VERSION, self::PRODUCTS_PATH, $sku,
-                'marketplace-status']));
+        $response = $this->accessor->get(implode(
+            "/",
+            [self::API_VERSION,
+            self::PRODUCTS_PATH,
+            $sku,
+            'marketplace-status']));
         /*
          * @var MarketPlaceStatus $marketplaceStatus
          */
@@ -336,8 +345,9 @@ class PartnerProductClient
     public function getActiveStatus(string $sku): ?ActiveStatus
     {
         $this->logger->debug("getActiveStatus called for sku=$sku");
-        $response = $this->accessor->get(implode("/", [self::API_VERSION, 
-                self::PRODUCTS_PATH, $sku, 'active-status']));
+        $response = $this->accessor->get(
+            implode("/", [self::API_VERSION, self::PRODUCTS_PATH, $sku, 'active-status'])
+        );
         /*
          * @var ActiveStatus $activeStatus
          */
