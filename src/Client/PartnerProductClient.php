@@ -99,9 +99,9 @@ class PartnerProductClient
     /**
      * Load all categories that can be used for product uploads to the OTTO marketplace.
      * See https://api.otto.market/docs#operation/Products-V2__getCategoryGroups for details.
-     * 
+     *
      * @param int $pageSize set the page size that should be used for iterating over all categories.
-     * The page size has to be between 10 and 2000. if you specify a smaller or greater page size the 
+     * The page size has to be between 10 and 2000. if you specify a smaller or greater page size the
      * value will be corrected automatically to fullfill these limits. Specifiying a smaller page size
      * will lead to a smaller footprint because less categories have to be held in memory while a
      * smaller page size will lead to more GET request against the OTTO API.
@@ -114,7 +114,8 @@ class PartnerProductClient
      */
     public function getCategories(int $pageSize = 100): \Iterator
     {
-        return new CategoryGroupIterator($this -> accessor, self::API_VERSION, self::PRODUCTS_PATH, $pageSize, $this -> logger);
+        return new CategoryGroupIterator($this -> accessor, self::API_VERSION, self::PRODUCTS_PATH,
+            $this -> logger, $pageSize);
     }
 
     /**
