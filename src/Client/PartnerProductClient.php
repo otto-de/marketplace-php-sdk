@@ -101,18 +101,19 @@ class PartnerProductClient
      * See https://api.otto.market/docs#operation/Products-V2__getCategoryGroups for details.
      *
      * @param  int $pageSize set the page size that should be used for iterating over all categories.
-     *                       The page size has to be between 10 and 2000. if you specify a smaller or greater page size the
-     *                       value will be corrected automatically to fullfill these limits. Specifiying a smaller page size
-     *                       will lead to a smaller footprint because less categories have to be held in memory while a
-     *                       smaller page size will lead to more GET request against the OTTO API.
-     *                       The default value for the page size is 100.
+     *                       The page size has to be between 10 and 2000. if you specify a smaller
+     *                       or greater page size the value will be corrected automatically to
+     *                       fullfill these limits. Specifiying a smaller page size will lead to
+     *                       a smaller footprint because less categories have to be held in memory
+     *                       while a smaller page size will lead to more GET request against the
+     *                       OTTO API. The default value for the page size is 100.
      * @return \Iterator an iterator object that can be used to iterate over all categories.
      * @throws ClientExceptionInterface on HTTP client exception
      * @throws Oauth2\Oauth2Exception on token refresh exception
      *
      * @psalm-suppress PossiblyInvalidMethodCall
      */
-    public function getCategories(int $pageSize=100): \Iterator
+    public function getCategories(int $pageSize = 100): \Iterator
     {
         return new CategoryGroupIterator(
             $this -> accessor,
@@ -171,10 +172,10 @@ class PartnerProductClient
      * @psalm-suppress InvalidReturnStatement
      */
     public function getProducts(
-        ?string $sku=null,
-        ?string $productReference=null,
-        ?string $category=null,
-        ?string $brand=null
+        ?string $sku = null,
+        ?string $productReference = null,
+        ?string $category = null,
+        ?string $brand = null
     ): array {
         $nextLink = implode("/", [self::API_VERSION, self::PRODUCTS_PATH]);
         $nextLink = $this->buildProductsLinkFromParameter($nextLink, $sku, $productReference, $category, $brand);
@@ -191,7 +192,8 @@ class PartnerProductClient
                 /*
                  * @var ProductVariation $productVariation
                  */
-                $productVariation = ObjectSerializer::deserialize($variation, "\Otto\Market\Products\Model\ProductVariation");
+                $productVariation = ObjectSerializer::deserialize($variation,
+                        "\Otto\Market\Products\Model\ProductVariation");
                 array_push($listOfProductVariations, $productVariation);
             }
 
@@ -238,7 +240,8 @@ class PartnerProductClient
                 $nextPostArray,
                 (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS)
             );
-            $postResult        = $this->accessor->post($path, $serializedPayload, ['Content-Type' => 'application/json']);
+            $postResult = $this->accessor->post($path, $serializedPayload, 
+                    ['Content-Type' => 'application/json']);
             $this->logger->debug("POST returned with status code " . $postResult->getStatusCode());
             /*
              * @var ProductProcessProgress $parsedPostResult
@@ -305,7 +308,8 @@ class PartnerProductClient
     public function getMarketplaceStatus(string $sku): ?MarketPlaceStatus
     {
         $this->logger->debug("getMarketplaceStatus called for sku=$sku");
-        $response = $this->accessor->get(implode("/", [self::API_VERSION, self::PRODUCTS_PATH, $sku, 'marketplace-status']));
+        $response = $this->accessor->get(implode("/", [self::API_VERSION, self::PRODUCTS_PATH, $sku,
+                'marketplace-status']));
         /*
          * @var MarketPlaceStatus $marketplaceStatus
          */
@@ -332,7 +336,8 @@ class PartnerProductClient
     public function getActiveStatus(string $sku): ?ActiveStatus
     {
         $this->logger->debug("getActiveStatus called for sku=$sku");
-        $response = $this->accessor->get(implode("/", [self::API_VERSION, self::PRODUCTS_PATH, $sku, 'active-status']));
+        $response = $this->accessor->get(implode("/", [self::API_VERSION, 
+                self::PRODUCTS_PATH, $sku, 'active-status']));
         /*
          * @var ActiveStatus $activeStatus
          */

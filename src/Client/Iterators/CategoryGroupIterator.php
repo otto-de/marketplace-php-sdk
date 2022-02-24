@@ -10,7 +10,6 @@ use Psr\Log\LoggerInterface;
 
 class CategoryGroupIterator implements \Iterator
 {
-
     private Oauth2ApiAccessor $accessor;
 
     private string $apiVersion;
@@ -29,8 +28,12 @@ class CategoryGroupIterator implements \Iterator
 
     private LoggerInterface $logger;
 
-    public function __construct(Oauth2ApiAccessor $accessor, string $apiVersion, string $productsPath,
-        LoggerInterface $logger, int $pageSize=100
+    public function __construct(
+        Oauth2ApiAccessor $accessor,
+        string $apiVersion,
+        string $productsPath,
+        LoggerInterface $logger,
+        int $pageSize = 100
     ) {
         $this -> accessor     = $accessor;
         $this -> apiVersion   = $apiVersion;
@@ -41,12 +44,13 @@ class CategoryGroupIterator implements \Iterator
 
     public function rewind(): void
     {
-        $this -> nextLink = implode("/", [$this -> apiVersion, $this -> productsPath, 'categories']) . "?" . "limit=" . strval($this -> pageSize);
+        $pathParts = [$this -> apiVersion, $this -> productsPath, 'categories'];
+        $this -> nextLink = implode("/", $pathParts) . "?" . "limit=" . strval($this -> pageSize);
         $this -> page     = -1;
         $this -> readCategoryGroups();
     }
 
-    function readCategoryGroups(): void
+    private function readCategoryGroups(): void
     {
         if (isset($this -> nextLink) && !is_null($this -> nextLink)) {
             $response = $this -> accessor -> get($this -> nextLink);
@@ -94,6 +98,7 @@ class CategoryGroupIterator implements \Iterator
 
     public function valid(): bool
     {
-        return isset($this -> categoryGroups) && isset($this -> categoryGroups -> getCategoryGroups()[$this -> position]);
+        return isset($this -> categoryGroups) && 
+                isset($this -> categoryGroups -> getCategoryGroups()[$this -> position]);
     }
 }
