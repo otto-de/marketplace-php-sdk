@@ -4,8 +4,8 @@
  * PartnerProductClient File Doc Comment
  * php version 7.4.15
  *
- * @license  https://opensource.org/licenses/Apache-2.0 Apache-2.0
- * @link     https://public-docs.live.api.otto.market/03_Products/v1/products-interface.html
+ * @license https://opensource.org/licenses/Apache-2.0 Apache-2.0
+ * @link    https://public-docs.live.api.otto.market/03_Products/v1/products-interface.html
  */
 
 namespace Otto\Market\Client;
@@ -28,8 +28,8 @@ use Psr\Log\LoggerInterface;
  * PartnerProductClient class is a PHP client for the OTTO Market Products API.
  * See https://api.otto.market/docs/03_Products/v2/products-interface.html
  *
- * @license  https://opensource.org/licenses/Apache-2.0 Apache-2.0
- * @link     https://api.otto.market/docs/03_Products/v2/products-interface.html
+ * @license https://opensource.org/licenses/Apache-2.0 Apache-2.0
+ * @link    https://api.otto.market/docs/03_Products/v2/products-interface.html
  */
 class PartnerProductClient
 {
@@ -37,8 +37,8 @@ class PartnerProductClient
     private const PRODUCTS_PATH = "products";
 
     /**
-    * the maximum amount of product variants that can be sent in one POST request
-    */
+     * the maximum amount of product variants that can be sent in one POST request
+     */
     private const MAX_PRODUCT_POST_SIZE = 500;
 
     /**
@@ -100,28 +100,33 @@ class PartnerProductClient
      * Load all categories that can be used for product uploads to the OTTO marketplace.
      * See https://api.otto.market/docs#operation/Products-V2__getCategoryGroups for details.
      *
-     * @param int $pageSize set the page size that should be used for iterating over all categories.
-     * The page size has to be between 10 and 2000. if you specify a smaller or greater page size the
-     * value will be corrected automatically to fullfill these limits. Specifiying a smaller page size
-     * will lead to a smaller footprint because less categories have to be held in memory while a
-     * smaller page size will lead to more GET request against the OTTO API.
-     * The default value for the page size is 100.
+     * @param  int $pageSize set the page size that should be used for iterating over all categories.
+     *                       The page size has to be between 10 and 2000. if you specify a smaller or greater page size the
+     *                       value will be corrected automatically to fullfill these limits. Specifiying a smaller page size
+     *                       will lead to a smaller footprint because less categories have to be held in memory while a
+     *                       smaller page size will lead to more GET request against the OTTO API.
+     *                       The default value for the page size is 100.
      * @return \Iterator an iterator object that can be used to iterate over all categories.
      * @throws ClientExceptionInterface on HTTP client exception
      * @throws Oauth2\Oauth2Exception on token refresh exception
      *
      * @psalm-suppress PossiblyInvalidMethodCall
      */
-    public function getCategories(int $pageSize = 100): \Iterator
+    public function getCategories(int $pageSize=100): \Iterator
     {
-        return new CategoryGroupIterator($this -> accessor, self::API_VERSION, self::PRODUCTS_PATH,
-            $this -> logger, $pageSize);
+        return new CategoryGroupIterator(
+            $this -> accessor,
+            self::API_VERSION,
+            self::PRODUCTS_PATH,
+            $this -> logger,
+            $pageSize
+        );
     }
 
     /**
      * Load a category definition by category name.
      *
-     * @param  string $givenCategory category to search for
+     * @param string $givenCategory category to search for
      *
      * @return CategoryGroup|null a CategoryGroup object if found, else null.
      *
@@ -139,22 +144,23 @@ class PartnerProductClient
             foreach ($categoryGroup->getCategories() as $category) {
                 if ($category == $givenCategory) {
                     /*
-                    * @var CategoryGroup $categoryGroup
-                    */
+                     * @var CategoryGroup $categoryGroup
+                     */
                     return $categoryGroup;
                 }
             }
         }
+
         return null;
     }
 
     /**
      * Get all product from defined request
      *
-     * @param  string|null $sku search parameter sku
-     * @param  string|null $productReference search parameter productReference
-     * @param  string|null $category search parameter category
-     * @param  string|null $brand search parameter brand
+     * @param string|null $sku              search parameter sku
+     * @param string|null $productReference search parameter productReference
+     * @param string|null $category         search parameter category
+     * @param string|null $brand            search parameter brand
      *
      * @return ProductVariation[] an array of all found products.
      *
@@ -165,10 +171,10 @@ class PartnerProductClient
      * @psalm-suppress InvalidReturnStatement
      */
     public function getProducts(
-        ?string $sku = null,
-        ?string $productReference = null,
-        ?string $category = null,
-        ?string $brand = null
+        ?string $sku=null,
+        ?string $productReference=null,
+        ?string $category=null,
+        ?string $brand=null
     ): array {
         $nextLink = implode("/", [self::API_VERSION, self::PRODUCTS_PATH]);
         $nextLink = $this->buildProductsLinkFromParameter($nextLink, $sku, $productReference, $category, $brand);
@@ -185,8 +191,7 @@ class PartnerProductClient
                 /*
                  * @var ProductVariation $productVariation
                  */
-                $productVariation =
-                    ObjectSerializer::deserialize($variation, "\Otto\Market\Products\Model\ProductVariation");
+                $productVariation = ObjectSerializer::deserialize($variation, "\Otto\Market\Products\Model\ProductVariation");
                 array_push($listOfProductVariations, $productVariation);
             }
 
@@ -207,7 +212,7 @@ class PartnerProductClient
      * This method sends multiple uploads, if the given array is larger than the maximum allowed number of
      * products that can be sent per request.
      *
-     * @param  ProductVariation[] $products
+     * @param ProductVariation[] $products
      *
      * @return ProductProcessProgress[] an array of all initial progress results.
      *
@@ -229,13 +234,11 @@ class PartnerProductClient
         while ($offset < sizeof($products)) {
             $nextPostArray = array_slice($products, $offset, self::MAX_PRODUCT_POST_SIZE);
             $this->logger->debug("Posting next batch of " . sizeof($nextPostArray) . " product variations");
-            $serializedPayload =
-                json_encode(
-                    $nextPostArray,
-                    (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS)
-                );
-            $postResult        =
-                $this->accessor->post($path, $serializedPayload, ['Content-Type' => 'application/json']);
+            $serializedPayload = json_encode(
+                $nextPostArray,
+                (JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_LINE_TERMINATORS)
+            );
+            $postResult        = $this->accessor->post($path, $serializedPayload, ['Content-Type' => 'application/json']);
             $this->logger->debug("POST returned with status code " . $postResult->getStatusCode());
             /*
              * @var ProductProcessProgress $parsedPostResult
@@ -246,7 +249,7 @@ class PartnerProductClient
             );
             array_push($initialProgresses, $parsedPostResult);
             $offset = ($offset + self::MAX_PRODUCT_POST_SIZE);
-        }
+        }//end while
 
         return $initialProgresses;
     }
@@ -255,7 +258,7 @@ class PartnerProductClient
      * Refresh the progress of an upload, and return the updated progress.
      * The last progress result is used as a token to retrieve the new state.
      *
-     * @param  ProductProcessProgress $lastProgress
+     * @param ProductProcessProgress $lastProgress
      *
      * @return ProductProcessProgress the ProductProcessProgress result.
      *
@@ -289,7 +292,7 @@ class PartnerProductClient
     /**
      * Get marketplace-status for a given sku
      *
-     * @param  string $sku
+     * @param string $sku
      *
      * @return MarketPlaceStatus|null the marketPlaceStatus of the given sku.
      *
@@ -302,8 +305,7 @@ class PartnerProductClient
     public function getMarketplaceStatus(string $sku): ?MarketPlaceStatus
     {
         $this->logger->debug("getMarketplaceStatus called for sku=$sku");
-        $response =
-            $this->accessor->get(implode("/", [self::API_VERSION, self::PRODUCTS_PATH, $sku, 'marketplace-status']));
+        $response = $this->accessor->get(implode("/", [self::API_VERSION, self::PRODUCTS_PATH, $sku, 'marketplace-status']));
         /*
          * @var MarketPlaceStatus $marketplaceStatus
          */
@@ -317,7 +319,7 @@ class PartnerProductClient
     /**
      * Get active-status for a given sku
      *
-     * @param  string $sku search parameter sku
+     * @param string $sku search parameter sku
      *
      * @return ActiveStatus|null the activeStatus of the given sku.
      *
@@ -344,7 +346,7 @@ class PartnerProductClient
     /**
      * Update active-status for a list of skus
      *
-     * @param  ActiveStatusListRequest $activeStatusListRequest
+     * @param ActiveStatusListRequest $activeStatusListRequest
      *
      * @return ProductProcessProgress the ProductProcessProgress result.
      *
