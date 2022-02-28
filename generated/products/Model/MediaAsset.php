@@ -60,7 +60,8 @@ class MediaAsset implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPITypes = [
         'type' => 'string',
-        'location' => 'string'
+        'location' => 'string',
+        'filename' => 'string'
     ];
 
     /**
@@ -72,7 +73,8 @@ class MediaAsset implements ModelInterface, ArrayAccess, \JsonSerializable
       */
     protected static $openAPIFormats = [
         'type' => null,
-        'location' => 'uri'
+        'location' => 'uri',
+        'filename' => null
     ];
 
     /**
@@ -103,7 +105,8 @@ class MediaAsset implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $attributeMap = [
         'type' => 'type',
-        'location' => 'location'
+        'location' => 'location',
+        'filename' => 'filename'
     ];
 
     /**
@@ -113,7 +116,8 @@ class MediaAsset implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $setters = [
         'type' => 'setType',
-        'location' => 'setLocation'
+        'location' => 'setLocation',
+        'filename' => 'setFilename'
     ];
 
     /**
@@ -123,7 +127,8 @@ class MediaAsset implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     protected static $getters = [
         'type' => 'getType',
-        'location' => 'getLocation'
+        'location' => 'getLocation',
+        'filename' => 'getFilename'
     ];
 
     /**
@@ -218,6 +223,7 @@ class MediaAsset implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $this->container['type'] = $data['type'] ?? null;
         $this->container['location'] = $data['location'] ?? null;
+        $this->container['filename'] = $data['filename'] ?? null;
     }
 
     /**
@@ -310,6 +316,31 @@ class MediaAsset implements ModelInterface, ArrayAccess, \JsonSerializable
 
         return $this;
     }
+
+    /**
+     * Gets filename
+     *
+     * @return string|null
+     */
+    public function getFilename()
+    {
+        return $this->container['filename'];
+    }
+
+    /**
+     * Sets filname
+     *
+     * @param string|null $filename The partners filename of the media asset.
+     *
+     * @return self
+     */
+    public function setFilename($filename)
+    {
+        $this->container['filename'] = $filename;
+
+        return $this;
+    }
+
     /**
      * Returns true if offset exists. False otherwise.
      *

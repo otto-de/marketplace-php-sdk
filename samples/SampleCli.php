@@ -103,14 +103,20 @@ class SampleCli extends PSR3CLI
                 $fileContents = file_get_contents($options->getArgs()[0]);
                 $productVariations = ObjectSerializer::deserialize($fileContents, '\Otto\Market\Products\Model\ProductVariation[]');
                 $this->debug('Parsed ' . sizeof($productVariations) . ' product variations');
-                $lastStatus = $this->productClient()->postProducts($productVariations);
-                $this->info('Uploaded product variations.');
-                while (true) {
-                    foreach ($lastStatus as $status) {
+                $status = $this->productClient()->postProducts($productVariations);
+                if (!empty($status))
+                {
+                    $status = $status[0];
+                    $this->info('Uploaded product variations.');
+                    while (true) {
+                        sleep(5);
                         $status = $this->productClient()->getUpdatedUploadProgress($status);
                         $this->info($status);
+                        if ($status -> getState() != 'pending')
+                        {
+                            break;
+                        }
                     }
-                    sleep(1);
                 }
                 break;
             case 'categories':
