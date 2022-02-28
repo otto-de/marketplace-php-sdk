@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.2.3 - 2022-02-28
+* fixed issue ([#2](i2)) <br/>
+  If a product variation was created using the OTTO marketplace portal, its media assets do have a filename attribute which
+  was not returned when querying the variation using the SDK. That has lead to problems uploading these variations again
+  using this SDK. <br/>
+  Getting a product variation now also returns the media asset filename. This enables the above mentioned variations to be uploaded
+  again if and only if the filename is not modified at all. If you modify the filename the variation will not be updated and
+  an error will be reported.
+
+[i2]: https://github.com/otto-de/marketplace-php-sdk/issues/2
 ## 0.2.2 - 2022-02-24
 
 * fixed issue ([#3][i3]) </br>
