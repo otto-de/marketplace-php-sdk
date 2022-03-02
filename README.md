@@ -67,7 +67,7 @@ We offer the following methods for usage:
 - [products][products-doc]
   * get brands
   * get categories
-  * get category defintion from category
+  * get category definition from category
   * get products
   * post products from json
   * get activeStatus
@@ -89,6 +89,6 @@ We offer the following methods for usage:
 [composer]: http://getcomposer.org
 [packagist]: http://packagist.org
 [packagist-install]: https://packagist.org/packages/otto/marketplace-php-sdk
-[shipments-doc]: https://api.otto.market/docs/06_Shipments/v1/shipment-interface.html
-[products-doc]: https://api.otto.market/docs/03_Products/v2/products-interface.html
+[shipments-doc]: https://api.otto.market/docs#tag/Shipments-V1
+[products-doc]: https://api.otto.market/docs#tag/Products-V2
 
