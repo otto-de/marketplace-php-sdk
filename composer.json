@@ -38,7 +38,7 @@
     "generate-openapi": "(Re-)generate the generated/ folder. Requires openapi-generator in PATH"
   },
   "require-dev": {
-    "vimeo/psalm": "^4.6",
+    "vimeo/psalm": "^4.6 || ^5.0",
     "squizlabs/php_codesniffer": "^3.5"
   }
 }
